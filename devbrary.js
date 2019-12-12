@@ -133,3 +133,13 @@ function dev_separador_unidad_mil(user_input){
 
         return formated_number;
     }
+/*LLAMADA DE FUNCION MÁS BREVE*/
+function echo (texto){
+   dev_echo(texto);
+}
+function var_dump (texto){
+   dev_var_dump(texto);
+}
+function var_dom_dump (texto){
+   dev_var_dom_dump(texto);
+}
