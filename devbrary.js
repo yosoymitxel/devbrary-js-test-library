@@ -29,3 +29,107 @@ function dev_var_dom_dump(idObjeto){
     }
 }
 
+function dev_echo(texto){
+    console.log(texto);
+}
+
+function dev_var_dump(dato) {
+    let tipoDato = typeof dato;
+    let valorDato = dato;
+    switch (tipoDato) {
+        case 'number':
+            if (valorDato % 1 == 0) {
+                tipoDato = 'int';
+            } else {
+                tipoDato = 'float';
+            }
+            echo(tipoDato + '(' + valorDato + ')');
+            break;
+        case 'string':
+            echo(tipoDato + '(' + valorDato.length + ') "' + valorDato + '"');
+            break;
+        case 'object':
+            if (Array.isArray(valorDato)) {
+                tipoDato = 'array';
+                echo(tipoDato + '(' + valorDato.length + ') "' + valorDato + '"');
+            }else if(valorDato == null){
+                echo('NULL');
+            }else{
+                echo('Objeto no reconocido.')
+            }
+            break;
+        case 'boolean':
+            echo(tipoDato + ' "' + valorDato + '"');
+            break;
+        case 'undefined':
+            echo('La variable no está definida. (undefined)');
+            break;
+    }
+}
+
+function dev_sin_caracteres_especiales(texto){
+    //Aquí añades las letras que no quieres que se usen
+    let vocalesNoPermitidas    = ['á','é','í','ó','ú','ñ'];
+    
+    //Aquí añades las letras que quieres que se usen
+    let vocalesPermitidas      = ['a','e','i','o','u','ni'];
+    
+    //Aquí añades los caracteres que no quieres que se usen
+    let caracteresNoPermitidos = ['?','\"','\''];
+
+    texto = (texto.toString()).toLowerCase();
+    for(let i=0; i<vocalesNoPermitidas.length;i++){
+        texto = texto.replace(vocalesNoPermitidas[i], vocalesPermitidas[i]);
+    }
+    
+    for(let i=0; i<caracteresNoPermitidos.length;i++){
+        texto = texto.replace(caracteresNoPermitidos[i], '_');
+    }
+    
+    //Esta parte reemplaza los espacios en blanco " " y los guiones "-" por guiones bajos "_"
+    texto = texto.replace(" - ", "");
+    texto = texto.replace(/\s/g,"_");
+    texto = texto.replace(/\W/g,'');
+
+    return texto;
+}
+
+function dev_quitar_espacios_extra(texto){
+    if(texto!='' && texto != null){
+        texto = texto.trim();
+        texto = texto.replace(/\s\s+/g, ' ');
+        texto = texto.replace(/\s\s/g, '');
+    }else{
+        echo('El String está vacío');
+    }
+    return texto;
+}
+
+function dev_conseguir_numero_string(texto){
+  let numero =  texto.match(/\d+/g);
+  
+  //Se valida si es es un array, hay caso (como el segundo) donde no sale un número directamente sino un array
+  numero = Array.isArray(numero)?numero.join(''):numero;
+  return numero;
+}
+
+function dev_separador_unidad_mil(user_input){
+        user_input = user_input.toString();
+        var filtered_number = user_input.replace(/[^0-9]/gi, '');
+        var length = filtered_number.length;
+        var breakpoint = 1;
+        var formated_number = '';
+
+        for(i = 1; i <= length; i++){
+            if(breakpoint > 3){
+                breakpoint = 1;
+                formated_number = '.' + formated_number;
+            }
+            var next_letter = i + 1;
+            formated_number = filtered_number.substring(length - i, length - (i - 1)) + formated_number;
+
+            breakpoint++;
+        }
+
+        return formated_number;
+    }
