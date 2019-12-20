@@ -127,25 +127,34 @@ function dev_conseguir_numero_string(texto){
 }
 
 function dev_separador_unidad_mil(user_input){
-        user_input = user_input.toString();
-        var filtered_number = user_input.replace(/[^0-9]/gi, '');
-        var length = filtered_number.length;
-        var breakpoint = 1;
-        var formated_number = '';
+    user_input = user_input.toString();
+    var filtered_number = user_input.replace(/[^0-9]/gi, '');
+    var length = filtered_number.length;
+    var breakpoint = 1;
+    var formated_number = '';
 
-        for(i = 1; i <= length; i++){
-            if(breakpoint > 3){
-                breakpoint = 1;
-                formated_number = '.' + formated_number;
-            }
-            var next_letter = i + 1;
-            formated_number = filtered_number.substring(length - i, length - (i - 1)) + formated_number;
-
-            breakpoint++;
+    for(i = 1; i <= length; i++){
+        if(breakpoint > 3){
+            breakpoint = 1;
+            formated_number = '.' + formated_number;
         }
+        var next_letter = i + 1;
+        formated_number = filtered_number.substring(length - i, length - (i - 1)) + formated_number;
 
-        return formated_number;
+        breakpoint++;
     }
+
+    return formated_number;
+}
+
+function dev_string_vacio(texto){
+    if(texto!='' && texto.length>0 && texto!=null && texto!==''){
+        return false;
+    }else{
+        return true;
+    }
+}
+
 /*LLAMADA DE FUNCION MÁS BREVE*/
 function echo (texto){
    dev_echo(texto);
