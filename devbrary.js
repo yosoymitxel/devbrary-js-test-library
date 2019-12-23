@@ -33,10 +33,10 @@ function dev_existe_objeto_dom(idObjeto){
     let id = '#'+idObjeto;
 
     if($(id).attr('id')!=undefined && $(id).attr('id')!=null && $(id).attr('id')!=''){
-        echo('El elemento "'+id+'" sí existe en el DOM.');
+        //echo('El elemento "'+id+'" sí existe en el DOM.');
         return true;
     }else{
-        echo('El elemento "'+id+'" no existe en el DOM.');
+        //echo('El elemento "'+id+'" no existe en el DOM.');
         return false;
     }
     
