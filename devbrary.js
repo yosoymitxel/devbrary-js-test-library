@@ -228,6 +228,14 @@ function dev_html_permitir_caracteres_input( permitidos, elEvento = event) {
     return permitidos.indexOf(caracter) != -1 || tecla_especial;
 }
 
+function dev_validar_email(t) {
+    return ( (/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+/.test(t)) );
+}
+
+function dev_validar_longitud_string(t,longitud) {
+    return (!dev_string_vacio(t) && t.length>=longitud);
+}
+
 /*LLAMADA DE FUNCION MÁS BREVE*/
 function echo (texto){
    dev_echo(texto);
