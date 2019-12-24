@@ -131,12 +131,12 @@ function dev_conseguir_numero_string(texto){
   return numero;
 }
 
-function dev_separador_unidad_mil(user_input){
-    user_input = user_input.toString();
-    var filtered_number = user_input.replace(/[^0-9]/gi, '');
-    var length = filtered_number.length;
-    var breakpoint = 1;
-    var formated_number = '';
+function dev_separador_unidad_mil(numero){
+    numero              = numero.toString();
+    let filtered_number = numero.replace(/[^0-9]/gi, '');
+    let length          = filtered_number.length;
+    let breakpoint      = 1;
+    let formated_number = '';
 
     for(i = 1; i <= length; i++){
         if(breakpoint > 3){
@@ -232,7 +232,12 @@ function dev_validar_email(t) {
     return ( (/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+/.test(t)) );
 }
 
-function dev_validar_longitud_string(t,longitud) {
+function dev_validar_url(t) {
+    let re = /^(file|http?:\/\/|https?:\/\/)\w+\.\w+/;
+    return t.match(re)? true: false;
+}
+
+function dev_validar_longitud_string(t,longitud = 1) {
     return (!dev_string_vacio(t) && t.length>=longitud);
 }
 
