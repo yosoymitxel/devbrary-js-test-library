@@ -73,7 +73,7 @@ function dev_var_dump(dato) {
                 echo('Objeto de tipo JSON');
                 echo(dato);
             }else{
-                echo('Objeto no reconocido.')
+                echo('Objeto no reconocido.');
             }
             break;
         case 'boolean':
@@ -172,6 +172,60 @@ function dev_fecha_actual_texto() {
     var f          = new Date();
     let fecha = `${diasSemana[f.getDay()]} ${f.getDate()} de ${meses[f.getMonth()]} de ${f.getFullYear()}`;
     return fecha;
+}
+
+function dev_html_permitir_caracteres_input( permitidos, elEvento = event) {
+    //Se usa con onkeypress
+    // onkeypress="return dev_html_permitir_caracteres_input('num')"
+    // onkeypress="return dev_html_permitir_caracteres_input('car')"
+    // onkeypress="return dev_html_permitir_caracteres_input('num_car')"
+    // Variables que definen los caracteres permitidos
+    let numeros = "0123456789";
+    let caracteres = " abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    let numeros_caracteres = numeros + caracteres;
+    let teclas_especiales = [8, 37, 39, 46];
+    // 8 = BackSpace, 46 = Supr, 37 = flecha izquierda, 39 = flecha derecha
+
+
+    // Seleccionar los caracteres a partir del parámetro de la función
+    switch(permitidos) {
+        case 'num':
+        case 'numero':
+        case 'numeros':
+            permitidos = numeros;
+            break;
+        case 'car':
+        case 'caracteres':
+        case 'letras':
+        case 'texto':
+            permitidos = caracteres;
+            break;
+        case 'num_car':
+        case 'alfanumerico':
+        case 'letrasnumeros':
+        case 'numerosyletras':
+            permitidos = numeros_caracteres;
+            break;
+    }
+
+    // Obtener la tecla pulsada
+    var evento = elEvento || window.event;
+    var codigoCaracter = evento.charCode || evento.keyCode;
+    var caracter = String.fromCharCode(codigoCaracter);
+
+    // Comprobar si la tecla pulsada es alguna de las teclas especiales
+    // (teclas de borrado y flechas horizontales)
+    var tecla_especial = false;
+    for(var i in teclas_especiales) {
+        if(codigoCaracter == teclas_especiales[i]) {
+            tecla_especial = true;
+            break;
+        }
+    }
+
+    // Comprobar si la tecla pulsada se encuentra en los caracteres permitidos
+    // o si es una tecla especial
+    return permitidos.indexOf(caracter) != -1 || tecla_especial;
 }
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
