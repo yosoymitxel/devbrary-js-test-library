@@ -67,6 +67,8 @@ function dev_var_dump(dato) {
                 echo(tipoDato + '(' + valorDato.length + ') "' + valorDato + '"');
             }else if(valorDato == null){
                 echo('NULL');
+            }else if(dev_existe_objeto_dom($(dato).attr('id'))){
+                dev_var_dom_dump($(dato).attr('id'));
             }else{
                 echo('Objeto no reconocido.')
             }
@@ -153,6 +155,20 @@ function dev_string_vacio(texto){
     }else{
         return true;
     }
+}
+
+function dev_fecha_actual() {
+    let f     = new Date();
+    let fecha = `${f.getDay()}/${f.getDate()}/${f.getFullYear()}`;
+    return fecha;
+}
+
+function dev_fecha_actual_texto() {
+    var meses      = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
+    var f          = new Date();
+    let fecha = `${diasSemana[f.getDay()]} ${f.getDate()} de ${meses[f.getMonth()]} de ${f.getFullYear()}`;
+    return fecha;
 }
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
