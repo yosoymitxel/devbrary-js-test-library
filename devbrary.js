@@ -1,46 +1,57 @@
+function dev_echo(texto){
+    console.log(texto);
+}
+
 function dev_var_dom_dump(idObjeto){
     //Imprimir atributos
     if(dev_existe_objeto_dom(idObjeto)){
         let id = '#'+idObjeto;
-        console.log('Objeto: ');
-        console.log($(id));
-        console.log('Id   : '+$(id).attr('id'));
-        if($(id).prop('name')!=undefined && $(id).prop('name')!=null && $(id).prop('name')!=''){
-            console.log('Name : '+$(id).prop('name'));
+        echo('Objeto: ');
+        echo($(id));
+        echo('Id   : '+$(id).attr('id'));
+        if(!dev_string_vacio($(id).prop('name'))){
+            echo('Name : '+$(id).prop('name'));
         }
 
-        if($(id).val()!=undefined && $(id).val()!=null && $(id).val()!=''){
-            console.log('Value: '+$(id).val());
+        if(!dev_string_vacio($(id).val())){
+            echo('Value: '+$(id).val());
         }
 
-        if($(id).text()!=undefined && $(id).text()!=null && $(id).text()!=''){
-            console.log('Text : '+($(id).text()).trim());
+        if(!dev_string_vacio($(id).text())){
+            echo('Text : '+($(id).text()).trim());
         }
 
-        if($(id).attr('css')!=undefined && $(id).attr('css')!=null && $(id).attr('css')!=''){
-            console.log('Css  : '+$(id).attr('css'));
+        if(!dev_string_vacio($(id).attr('css'))){
+            echo('Css  : '+$(id).attr('css'));
         }
-        if($(id).attr('class')!=undefined && $(id).attr('class')!=null && $(id).attr('class')!=''){
-            console.log('Class: '+$(id).attr('class'));
+        
+        if(!dev_string_vacio($(id).attr('class'))){
+            echo('Class: '+$(id).attr('class'));
+        }
+        
+        if(!dev_string_vacio($(id).attr('style'))){
+            echo('Style: '+$(id).attr('class'));
         }
     }else{
-        console.log('El elemento "'+id+'" no existe en el DOM.');
+        echo('El elemento "'+id+'" no existe en el DOM.');
     }
 }
 
 function dev_existe_objeto_dom(idObjeto){
     if(dev_es_tipo_de_dato(idObjeto,'string')){
         idObjeto = dev_quitar_espacios_blancos(idObjeto);
-        if((!idObjeto.startsWith('#') && !idObjeto.startsWith('.')) && idObjeto.startsWith('#')){
-            let id = idObjeto.startsWith('#')?'#'+idObjeto:idObjeto;
-            if($(id).attr('id')!=undefined && $(id).attr('id')!=null && $(id).attr('id')!=''){
+        if((!idObjeto.startsWith('#') && !idObjeto.startsWith('.')) || idObjeto.startsWith('#')){
+            let id = idObjeto.startsWith('#')?idObjeto:'#'+idObjeto;
+
+            if(!dev_string_vacio($(id).attr('id'))){
                 return true;
             }else{
                 return false;
             }
         }else if(idObjeto.startsWith('.')){
             let id = idObjeto;
-            if($(id).attr('class')!=undefined && $(id).attr('class')!=null && $(id).attr('class')!=''){
+
+            if(!dev_string_vacio($(id).attr('class'))){
                 return true;
             }else{
                 return false;
@@ -78,10 +89,6 @@ function dev_es_tipo_de_dato(dato,tipo) {
     }else{
         return false;
     }
-}
-
-function dev_echo(texto){
-    console.log(texto);
 }
 
 function dev_var_dump(dato) {
@@ -195,7 +202,7 @@ function dev_separador_unidad_mil(numero){
 }
 
 function dev_string_vacio(texto){
-    if(texto!='' && texto.length>0 && texto!=null && texto!==''){
+    if(texto !=undefined && texto!='' && texto.length>0 && texto!=null && texto!==''){
         return false;
     }else{
         return true;
