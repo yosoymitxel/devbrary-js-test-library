@@ -1,8 +1,7 @@
 function dev_var_dom_dump(idObjeto){
-    let id = '#'+idObjeto;
-
     //Imprimir atributos
-    if($(id).attr('id')!=undefined && $(id).attr('id')!=null && $(id).attr('id')!=''){
+    if(dev_existe_objeto_dom(idObjeto)){
+        let id = '#'+idObjeto;
         console.log('Objeto: ');
         console.log($(id));
         console.log('Id   : '+$(id).attr('id'));
@@ -30,16 +29,55 @@ function dev_var_dom_dump(idObjeto){
 }
 
 function dev_existe_objeto_dom(idObjeto){
-    let id = '#'+idObjeto;
-
-    if($(id).attr('id')!=undefined && $(id).attr('id')!=null && $(id).attr('id')!=''){
-        //echo('El elemento "'+id+'" sí existe en el DOM.');
-        return true;
+    if(dev_es_tipo_de_dato(idObjeto,'string')){
+        idObjeto = dev_quitar_espacios_blancos(idObjeto);
+        if((!idObjeto.startsWith('#') && !idObjeto.startsWith('.')) && idObjeto.startsWith('#')){
+            let id = idObjeto.startsWith('#')?'#'+idObjeto:idObjeto;
+            if($(id).attr('id')!=undefined && $(id).attr('id')!=null && $(id).attr('id')!=''){
+                return true;
+            }else{
+                return false;
+            }
+        }else if(idObjeto.startsWith('.')){
+            let id = idObjeto;
+            if($(id).attr('class')!=undefined && $(id).attr('class')!=null && $(id).attr('class')!=''){
+                return true;
+            }else{
+                return false;
+            }
+        }
     }else{
-        //echo('El elemento "'+id+'" no existe en el DOM.');
         return false;
     }
-    
+}
+
+function dev_es_tipo_de_dato(dato,tipo) {
+    tipo = tipo.toLowerCase();
+    switch (tipo) {
+        case 'numero':
+        case 'número':
+        case 'num':
+        case 'numeric':
+            tipo = 'number'
+            break;
+        case 'bool':
+        case 'boolean':
+        case 'booleano':
+            tipo = 'boolean'
+            break;
+        case 'string':
+        case 'texto':
+        case 'alfanumerico':
+            tipo = 'string'
+            break;
+    }
+    if((typeof dato === 'string' || dato instanceof String) && typeof dato === tipo){
+        return true;
+    }else if (typeof dato === tipo){
+        return true;
+    }else{
+        return false;
+    }
 }
 
 function dev_echo(texto){
@@ -83,6 +121,10 @@ function dev_var_dump(dato) {
             echo('La variable no está definida. (undefined)');
             break;
     }
+}
+
+function dev_quitar_espacios_blancos(texto) {
+    return texto.replace(/\s/g,"");
 }
 
 function dev_sin_caracteres_especiales(texto){
