@@ -306,6 +306,10 @@ function dev_contador_automatico(valor=false) {
     return dev_contador_automatico.counter;
 }
 
+function dev_primera_letra_mayuscula(texto){
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
 /*LLAMADA DE FUNCION MÁS BREVE*/
 function echo (texto){
    dev_echo(texto);
