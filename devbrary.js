@@ -290,6 +290,14 @@ function dev_validar_longitud_string(t,longitud = 1) {
     return (!dev_string_vacio(t) && t.length>=longitud);
 }
 
+function dev_contador_texto_para_pruebas(texto='Prueba') {
+    if( typeof dev_contador_texto_para_pruebas.counter == 'undefined' ) {
+        dev_contador_texto_para_pruebas.counter = 0;
+    }
+    dev_contador_texto_para_pruebas.counter++;
+    console.log(texto+': '+dev_contador_texto_para_pruebas.counter);
+}
+
 /*LLAMADA DE FUNCION MÁS BREVE*/
 function echo (texto){
    dev_echo(texto);
