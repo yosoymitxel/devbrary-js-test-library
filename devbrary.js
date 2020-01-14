@@ -81,6 +81,9 @@ function dev_es_tipo_de_dato(dato,tipo) {
         case 'alfanumerico':
             tipo = 'string'
             break;
+        case 'undefined':
+            tipo = 'undefined'
+            break;
     }
     if((typeof dato === 'string' || dato instanceof String) && typeof dato === tipo){
         return true;
@@ -102,62 +105,69 @@ function dev_var_dump(dato) {
                 tipoDato = 'float';
             }
             echo(tipoDato + '(' + valorDato + ')');
+            return tipoDato;
             break;
         case 'string':
             echo(tipoDato + '(' + valorDato.length + ') "' + valorDato + '"');
+            return 'string';
             break;
         case 'object':
             if (Array.isArray(valorDato)) {
                 tipoDato = 'array';
                 echo(`${tipoDato} (${valorDato.length}) "${valorDato}"`);
+                return 'array';
             }else if(valorDato == null){
                 echo('NULL');
+                return 'NULL';
             }else if(dev_existe_objeto_dom($(dato).attr('id'))){
                 dev_var_dom_dump($(dato).attr('id'));
             }else if(dato !== undefined && dato !== null && dato.constructor == Object){
                 echo('Objeto de tipo JSON');
                 echo(dato);
+                return 'json';
             }else{
                 echo('Objeto no reconocido.');
+                return 'Objeto no reconocido';
             }
             break;
         case 'boolean':
             echo(tipoDato + ' "' + valorDato + '"');
+            return 'boolean';
             break;
         case 'undefined':
             echo('La variable no está definida. (undefined)');
+            return 'undefined';
             break;
     }
 }
 
 function dev_quitar_espacios_blancos(texto) {
-    return texto.replace(/\s/g,"");
+    return dev_es_tipo_de_dato(texto,'undefined')?'':(texto.replace(/\s/g,""));
 }
 
 function dev_sin_caracteres_especiales(texto){
-    //Aquí añades las letras que no quieres que se usen
-    let vocalesNoPermitidas    = ['á','é','í','ó','ú','ñ'];
-    
-    //Aquí añades las letras que quieres que se usen
-    let vocalesPermitidas      = ['a','e','i','o','u','ni'];
-    
-    //Aquí añades los caracteres que no quieres que se usen
-    let caracteresNoPermitidos = ['?','\"','\''];
+    if(dev_es_tipo_de_dato(texto,'string')){
+        //Aquí añades las letras que no quieres que se usen
+        let vocalesNoPermitidas    = ['á','é','í','ó','ú','ñ'];
 
-    texto = (texto.toString()).toLowerCase();
-    for(let i=0; i<vocalesNoPermitidas.length;i++){
-        texto = texto.replace(vocalesNoPermitidas[i], vocalesPermitidas[i]);
-    }
-    
-    for(let i=0; i<caracteresNoPermitidos.length;i++){
-        texto = texto.replace(caracteresNoPermitidos[i], '_');
-    }
-    
-    //Esta parte reemplaza los espacios en blanco " " y los guiones "-" por guiones bajos "_"
-    texto = texto.replace(" - ", "");
-    texto = texto.replace(/\s/g,"_");
-    texto = texto.replace(/\W/g,'');
+        //Aquí añades las letras que quieres que se usen
+        let vocalesPermitidas      = ['a','e','i','o','u','ni'];
 
+        //Aquí añades los caracteres que no quieres que se usen
+        let caracteresNoPermitidos = ['?','\"','\''];
+
+        texto = (texto.toString()).toLowerCase();
+        for(let i=0; i<vocalesNoPermitidas.length;i++){
+            texto = texto.replace(vocalesNoPermitidas[i], vocalesPermitidas[i]);
+        }
+
+        for(let i=0; i<caracteresNoPermitidos.length;i++){
+            texto = texto.replace(caracteresNoPermitidos[i], '_');
+        }
+
+        //Esta parte reemplaza los espacios en blanco " " y los guiones "-" por guiones bajos "_"
+        texto = texto.replace(/(\s+|\-+|\_\_)+/g,"_");
+    }
     return texto;
 }
 
@@ -283,11 +293,36 @@ function dev_validar_email(t) {
 
 function dev_validar_url(t) {
     let re = /^(file|http?:\/\/|https?:\/\/)\w+\.\w+/;
-    return t.match(re)? true: false;
+    return t.match(re);
 }
 
 function dev_validar_longitud_string(t,longitud = 1) {
     return (!dev_string_vacio(t) && t.length>=longitud);
+}
+
+function dev_convertir_a_sting(t) {
+
+}
+
+function dev_copiar_en_portapapeles(dato) {
+    
+}
+
+function dev_url_decode(t){
+    return decodeURIComponent(t)
+}
+
+function dev_url_encode(t){
+    return encodeURIComponent(t)
+}
+
+function dev_string_incluye(t,busqueda) {
+    return dev_es_tipo_de_dato(t,'string')?t.includes(busqueda):'';
+}
+
+function dev_string_incluye_reg(t,expresion) {
+    let expreg = new RegExp(expresion);
+    return dev_es_tipo_de_dato(t,'string')?expreg.test(t):false;
 }
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
@@ -299,4 +334,7 @@ function var_dump (texto){
 }
 function var_dom_dump (texto){
    dev_var_dom_dump(texto);
+}
+function string_isset(t,longitud = 1) {
+    return dev_validar_longitud_string(t,longitud);
 }
