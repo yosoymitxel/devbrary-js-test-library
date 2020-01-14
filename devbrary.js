@@ -141,6 +141,38 @@ function dev_var_dump(dato) {
     }
 }
 
+function dev_tipo_dato(dato) {
+    let tipoDato = typeof dato;
+    let valorDato = dato;
+    switch (tipoDato) {
+        case 'number':
+            if (Number.isSafeInteger(valorDato)) {
+                tipoDato = 'int';
+            } else {
+                tipoDato = 'float';
+            }
+            return tipoDato;
+        case 'string':
+            return 'string';
+        case 'object':
+            if (Array.isArray(valorDato)) {
+                return 'array';
+            }else if(valorDato == null){
+                return 'NULL';
+            }else if(dev_existe_objeto_dom($(dato).attr('id'))){
+                return 'dom';
+            }else if(dato !== undefined && dato !== null && dato.constructor == Object){
+                return 'json';
+            }else{
+                return 'Objeto no reconocido';
+            }
+        case 'boolean':
+            return 'boolean';
+        case 'undefined':
+            return 'undefined';
+    }
+}
+
 function dev_quitar_espacios_blancos(texto) {
     return dev_es_tipo_de_dato(texto,'undefined')?'':(texto.replace(/\s/g,""));
 }
@@ -301,11 +333,28 @@ function dev_validar_longitud_string(t,longitud = 1) {
 }
 
 function dev_convertir_a_sting(t) {
-
+    if(!dev_es_tipo_de_dato(t,'string')){
+        switch (dev_tipo_dato(t)){
+            case 'int':
+            case 'boolean':
+            case 'float':
+                t = String(t);
+                break;
+            case 'null':
+            case 'undefined':
+                t= '';
+                break;
+        }
+    }
+    return t;
 }
 
 function dev_copiar_en_portapapeles(dato) {
-    
+    let $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val(dato).select();
+    document.execCommand("copy");
+    $temp.remove();
 }
 
 function dev_url_decode(t){
