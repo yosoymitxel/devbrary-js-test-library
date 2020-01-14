@@ -374,6 +374,14 @@ function dev_string_incluye_reg(t,expresion) {
     return dev_es_tipo_de_dato(t,'string')?expreg.test(t):false;
 }
 
+function dev_contador_texto_para_pruebas(texto='Prueba') {
+    if( typeof dev_contador_texto_para_pruebas.counter == 'undefined' ) {
+        dev_contador_texto_para_pruebas.counter = 0;
+    }
+    dev_contador_texto_para_pruebas.counter++;
+    console.log(texto+': '+dev_contador_texto_para_pruebas.counter);
+}
+
 /*LLAMADA DE FUNCION MÁS BREVE*/
 function echo (texto){
    dev_echo(texto);
