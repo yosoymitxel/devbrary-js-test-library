@@ -382,6 +382,14 @@ function dev_contador_texto_para_pruebas(texto='Prueba') {
     console.log(texto+': '+dev_contador_texto_para_pruebas.counter);
 }
 
+function dev_contador_automatico(valor=false) {
+    if( typeof dev_contador_automatico.counter == 'undefined' || valor===0) {
+        dev_contador_automatico.counter = 0;
+    }
+    dev_contador_automatico.counter++;
+    return dev_contador_automatico.counter;
+}
+
 /*LLAMADA DE FUNCION MÁS BREVE*/
 function echo (texto){
    dev_echo(texto);
