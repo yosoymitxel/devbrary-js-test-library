@@ -342,8 +342,6 @@ function dev_convertir_a_sting(t) {
                 break;
             case 'null':
             case 'undefined':
-                t= '';
-                break;
             default:
                 t= '';
                 break;
