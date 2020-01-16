@@ -392,7 +392,7 @@ function dev_contador_automatico(valor=false) {
 }
 
 function dev_primera_letra_mayuscula(texto){
-    return texto.charAt(0).toUpperCase() + texto.slice(1);
+    return texto.charAt(0).toUpperCase() + (texto.slice(1)).toLocaleLowerCase();
 }
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
