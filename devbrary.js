@@ -158,7 +158,7 @@ function dev_tipo_dato(dato) {
             if (Array.isArray(valorDato)) {
                 return 'array';
             }else if(valorDato == null){
-                return 'NULL';
+                return 'null';
             }else if(dev_existe_objeto_dom($(dato).attr('id'))){
                 return 'dom';
             }else if(dato !== undefined && dato !== null && dato.constructor == Object){
@@ -334,7 +334,7 @@ function dev_validar_longitud_string(t,longitud = 1) {
 
 function dev_convertir_a_sting(t) {
     if(!dev_es_tipo_de_dato(t,'string')){
-        switch (dev_tipo_dato(t).toLowerCase()){
+        switch (dev_tipo_dato(t)){
             case 'int':
             case 'boolean':
             case 'float':
@@ -389,6 +389,10 @@ function dev_contador_automatico(valor=false) {
     }
     dev_contador_automatico.counter++;
     return dev_contador_automatico.counter;
+}
+
+function dev_primera_letra_mayuscula(texto){
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
 }
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
