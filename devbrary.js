@@ -334,7 +334,7 @@ function dev_validar_longitud_string(t,longitud = 1) {
 
 function dev_convertir_a_sting(t) {
     if(!dev_es_tipo_de_dato(t,'string')){
-        switch (dev_tipo_dato(t)){
+        switch (dev_tipo_dato(t).toLowerCase()){
             case 'int':
             case 'boolean':
             case 'float':
@@ -342,6 +342,9 @@ function dev_convertir_a_sting(t) {
                 break;
             case 'null':
             case 'undefined':
+                t= '';
+                break;
+            default:
                 t= '';
                 break;
         }
