@@ -244,6 +244,7 @@ function dev_separador_unidad_mil(numero){
 }
 
 function dev_string_vacio(texto){
+    texto = dev_convertir_a_sting(texto);
     if(texto !=undefined && texto!='' && texto.length>0 && texto!=null && texto!==''){
         return false;
     }else{
