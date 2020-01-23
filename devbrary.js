@@ -352,7 +352,7 @@ function dev_convertir_a_sting(t) {
 }
 
 function dev_copiar_en_portapapeles(dato) {
-    let $temp = $("<input>");
+    let $temp = $("<textarea>");
     $("body").append($temp);
     $temp.val(dato).select();
     document.execCommand("copy");
