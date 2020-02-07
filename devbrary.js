@@ -190,7 +190,8 @@ function dev_sin_caracteres_especiales(texto){
 
         texto = (texto.toString()).toLowerCase();
         for(let i=0; i<vocalesNoPermitidas.length;i++){
-            texto = texto.replace(vocalesNoPermitidas[i], vocalesPermitidas[i]);
+            texto = texto.replace(new RegExp(vocalesNoPermitidas[i], 'g'), vocalesPermitidas[i]);
+            //texto = texto.replace(vocalesNoPermitidas[i], vocalesPermitidas[i]);
         }
 
         for(let i=0; i<caracteresNoPermitidos.length;i++){
