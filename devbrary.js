@@ -398,6 +398,7 @@ function dev_primera_letra_mayuscula(texto){
 }
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
+
 function echo (texto){
    dev_echo(texto);
 }
