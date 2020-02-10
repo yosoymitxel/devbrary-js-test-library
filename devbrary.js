@@ -210,7 +210,7 @@ function dev_quitar_espacios_extra(texto){
         texto = texto.replace(/\s\s+/g, ' ');
         texto = texto.replace(/\s\s/g, '');
     }else{
-        echo('El String está vacío');
+        texto = '';
     }
     return texto;
 }
