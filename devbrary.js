@@ -3,7 +3,7 @@ function dev_echo(texto){
 }
 
 function dev_var_dom_dump(idObjeto){
-    let id = dev_es_tipo_de_dato(idObjeto,'string')? idObjeto : null;
+    let id = dev_is_string(idObjeto)? idObjeto : null;
     if(dev_existe_objeto_dom(idObjeto)){
         echo('Objeto: ');
         echo($(id));
@@ -38,7 +38,7 @@ function dev_var_dom_dump(idObjeto){
 }
 
 function dev_existe_objeto_dom(idObjeto){
-    if(dev_es_tipo_de_dato(idObjeto,'string')){
+    if(dev_is_string(idObjeto)){
         idObjeto = dev_quitar_espacios_blancos(idObjeto);
         if((!idObjeto.startsWith('#') && !idObjeto.startsWith('.')) || idObjeto.startsWith('#')){
             let id = idObjeto.startsWith('#')?idObjeto:'#'+idObjeto;
@@ -174,11 +174,11 @@ function dev_tipo_dato(dato) {
 }
 
 function dev_quitar_espacios_blancos(texto) {
-    return dev_es_tipo_de_dato(texto,'string')?(texto.replace(/\s/g,"")):'';
+    return dev_is_string(texto)?(texto.replace(/\s/g,"")):'';
 }
 
 function dev_sin_caracteres_especiales(texto){
-    if(dev_es_tipo_de_dato(texto,'string')){
+    if(dev_is_string(texto)){
         //Aquí añades las letras que no quieres que se usen
         let vocalesNoPermitidas    = ['á','é','í','ó','ú','ñ'];
 
@@ -335,7 +335,7 @@ function dev_validar_longitud_string(t,longitud = 1) {
 }
 
 function dev_convertir_a_sting(t) {
-    if(!dev_es_tipo_de_dato(t,'string')){
+    if(!dev_is_string(t)){
         switch (dev_tipo_dato(t)){
             case 'int':
             case 'boolean':
@@ -369,12 +369,12 @@ function dev_url_encode(t){
 }
 
 function dev_string_incluye(t,busqueda) {
-    return dev_es_tipo_de_dato(t,'string')?t.includes(busqueda):'';
+    return dev_is_string(t)?t.includes(busqueda):'';
 }
 
 function dev_string_incluye_reg(t,expresion) {
     let expreg = new RegExp(expresion);
-    return dev_es_tipo_de_dato(t,'string')?expreg.test(t):false;
+    return dev_is_string(t)?expreg.test(t):false;
 }
 
 function dev_contador_texto_para_pruebas(texto='Prueba') {
@@ -398,8 +398,76 @@ function dev_primera_letra_mayuscula(texto){
 }
 
 function dev_contar_caracteres(t) {
-    return (dev_es_tipo_de_dato(t,'string'))?t.length:0;
+    return (dev_is_string(t))?t.length:0;
 }
+
+function dev_string_inicia_con(t,busqueda) {
+    return dev_is_string(t)? t.startsWith(busqueda) : false;
+}
+
+function dev_string_termina_con(t,busqueda) {
+    return dev_is_string(t)? t.endsWith(busqueda) : false;
+}
+
+function dev_dom_value(idObjeto) {
+    return dev_existe_objeto_dom(t_trim(idObjeto))? $(dev_dom_objeto(idObjeto)).val() : false;
+}
+
+function dev_dom_objeto(idObjeto,buscarTodo=false) {
+    if(dev_is_string(idObjeto)){
+        idObjeto = t_trim(idObjeto);
+        let id = idObjeto.startsWith('#')?idObjeto:'#'+idObjeto;
+
+        if(!dev_string_vacio($(id).attr('id'))){
+            if (buscarTodo){
+                return $(id);
+            }else{
+                return $(id)[0];
+            }
+        }else{
+            return false;
+        }
+    }else{
+        return false;
+    }
+}
+
+function dev_form_email(t) {
+    return dev_validar_email(t);
+}
+
+function dev_form_url(t) {
+    return dev_validar_url(t);
+}
+
+function dev_form_Textarea(idObjeto,longitud=0) {
+    return dev_validar_longitud_string($('#'+idObjeto).val(),longitud) ? true : false;
+}
+
+function dev_form_radio_box(idObjeto) {
+    return $(idObjeto).is(":checked") ? true : false;
+}
+
+function dev_form_select(idSelect) {
+    return $(idSelect).val() ? true : false;
+}
+
+function dev_is_string(t) {
+    return dev_es_tipo_de_dato(t,'string');
+}
+
+function dev_is_numero(obj) {
+    return dev_es_tipo_de_dato(obj,'numero');
+}
+
+function dev_is_bool(obj) {
+    return dev_es_tipo_de_dato(obj,'bool');
+}
+
+function dev_is_undefined(obj) {
+    return dev_es_tipo_de_dato(obj,'undefined');
+}
+
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
 
@@ -415,3 +483,7 @@ function var_dom_dump (texto){
 function string_isset(t,longitud = 1) {
     return dev_validar_longitud_string(t,longitud);
 }
+function t_trim(t) {
+    return dev_quitar_espacios_extra(t);
+}
+
