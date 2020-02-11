@@ -5,7 +5,7 @@ function dev_echo(texto){
 function dev_var_dom_dump(idObjeto){
     //Imprimir atributos
     if(dev_existe_objeto_dom(idObjeto)){
-        let id = '#'+idObjeto;
+        var id = '#'+idObjeto;
         echo('Objeto: ');
         echo($(id));
         echo('Id   : '+$(id).attr('id'));
@@ -24,11 +24,11 @@ function dev_var_dom_dump(idObjeto){
         if(!dev_string_vacio($(id).attr('css'))){
             echo('Css  : '+$(id).attr('css'));
         }
-        
+
         if(!dev_string_vacio($(id).attr('class'))){
             echo('Class: '+$(id).attr('class'));
         }
-        
+
         if(!dev_string_vacio($(id).attr('style'))){
             echo('Style: '+$(id).attr('class'));
         }
