@@ -3,12 +3,12 @@ function dev_echo(texto){
 }
 
 function dev_var_dom_dump(idObjeto){
-    //Imprimir atributos
+    let id = dev_es_tipo_de_dato(idObjeto,'string')? idObjeto : null;
     if(dev_existe_objeto_dom(idObjeto)){
-        var id = '#'+idObjeto;
         echo('Objeto: ');
         echo($(id));
         echo('Id   : '+$(id).attr('id'));
+
         if(!dev_string_vacio($(id).prop('name'))){
             echo('Name : '+$(id).prop('name'));
         }
