@@ -174,7 +174,7 @@ function dev_tipo_dato(dato) {
 }
 
 function dev_quitar_espacios_blancos(texto) {
-    return dev_es_tipo_de_dato(texto,'undefined')?'':(texto.replace(/\s/g,""));
+    return dev_es_tipo_de_dato(texto,'string')?(texto.replace(/\s/g,"")):'';
 }
 
 function dev_sin_caracteres_especiales(texto){
@@ -395,6 +395,10 @@ function dev_contador_automatico(valor=false) {
 
 function dev_primera_letra_mayuscula(texto){
     return texto.charAt(0).toUpperCase() + (texto.slice(1)).toLocaleLowerCase();
+}
+
+function dev_contar_caracteres(t) {
+    return (dev_es_tipo_de_dato(t,'string'))?t.length:0;
 }
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
