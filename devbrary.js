@@ -200,6 +200,7 @@ function dev_sin_caracteres_especiales(texto){
 
         //Esta parte reemplaza los espacios en blanco " " y los guiones "-" por guiones bajos "_"
         texto = texto.replace(/(\s+|\-+|\_\_)+/g,"_");
+        texto = dev_string_reemplazar_expresion_regular(texto,'\\W','');
     }
     return texto;
 }
