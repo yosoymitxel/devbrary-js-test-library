@@ -440,16 +440,24 @@ function dev_form_url(t) {
     return dev_validar_url(t);
 }
 
-function dev_form_Textarea(idObjeto,longitud=0) {
-    return dev_validar_longitud_string($('#'+idObjeto).val(),longitud) ? true : false;
+function dev_form_text_area(idObjeto,longitud=0) {
+    return dev_validar_longitud_string((dev_dom_value(idObjeto)),longitud) ? true : false;
 }
 
 function dev_form_radio_box(idObjeto) {
-    return $(idObjeto).is(":checked") ? true : false;
+    return $(dev_dom_objeto(idObjeto)).is(":checked") ? true : false;
 }
 
 function dev_form_select(idSelect) {
-    return $(idSelect).val() ? true : false;
+    return (dev_dom_value(idSelect)) ? true : false;
+}
+
+function dev_form_input_string(idSelect,longitud=0) {
+    return dev_validar_longitud_string($(idSelect).val(),longitud) ? true : false;
+}
+
+function dev_form_input_numero(idSelect) {
+    return dev_is_numero(dev_dom_value(idSelect)) ? true : false;
 }
 
 function dev_is_string(t) {
@@ -468,6 +476,18 @@ function dev_is_undefined(obj) {
     return dev_es_tipo_de_dato(obj,'undefined');
 }
 
+function dev_01_help(nombreDeFuncion=''){
+    echo('Aquí puedes escribir el nombre de la función para saber cómo funciona');
+}
+
+function dev_string_reemplazar_expresion_regular(t,expresion,reemplazo) {
+    if(dev_is_string(t) && dev_string_incluye_reg(t,expresion)){
+        var re = new RegExp(expresion,'g');
+        return t.replace(re,reemplazo);
+    }else{
+        return t;
+    }
+}
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
 
