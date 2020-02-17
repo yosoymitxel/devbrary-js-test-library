@@ -177,7 +177,7 @@ function dev_quitar_espacios_blancos(texto) {
     return dev_is_string(texto)?(texto.replace(/\s/g,"")):'';
 }
 
-function dev_sin_caracteres_especiales(texto){
+function dev_sin_caracteres_especiales(texto,quitarTodos=true){
     if(dev_is_string(texto)){
         //Aquí añades las letras que no quieres que se usen
         let vocalesNoPermitidas    = ['á','é','í','ó','ú','ñ'];
@@ -200,7 +200,11 @@ function dev_sin_caracteres_especiales(texto){
 
         //Esta parte reemplaza los espacios en blanco " " y los guiones "-" por guiones bajos "_"
         texto = texto.replace(/(\s+|\-+|\_\_)+/g,"_");
-        texto = dev_string_reemplazar_expresion_regular(texto,'\\W','');
+
+        if(quitarTodos){
+            texto = dev_string_reemplazar_expresion_regular(texto,'\\W','');
+        }
+
     }
     return texto;
 }
