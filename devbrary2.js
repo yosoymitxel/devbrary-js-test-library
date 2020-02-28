@@ -78,6 +78,11 @@ function dev_test_es_tipo_de_dato(dato,tipo) {
             tipo = 'undefined'
             break;
     }
+
+    if(dev_test_var_dump(dato,false,true) == tipo){
+        return true;
+    }
+
     if((typeof dato === 'string' || dato instanceof String) && typeof dato === tipo){
         return true;
     }else if (typeof dato === tipo){
@@ -111,7 +116,7 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
                 return 'array';
             }else if(valorDato == null){
                 if(imprimir) echo('NULL');
-                if(retornar) return 'NULL';
+                if(retornar) return 'null';
             }else if(dev_dom_existe_objeto($(dato).attr('id'))){
                 dev_test_var_dom_dump($(dato).attr('id'));
             }else if(dato !== undefined && dato !== null && dato.constructor == Object){
@@ -358,6 +363,10 @@ function dev_is_undefined(obj) {
     return dev_test_es_tipo_de_dato(obj,'undefined');
 }
 
+function dev_is_array(obj,tamanio=0) {
+    return (dev_test_tipo_dato(obj)==='array' && obj.length>=tamanio);
+}
+
 /*FECHA*/
 
 function dev_fec_fecha_actual() {
@@ -447,6 +456,36 @@ function dev_dom_copiar_en_portapapeles(dato) {
     $temp.val(dato).select();
     document.execCommand("copy");
     $temp.remove();
+}
+
+function dev_dom_crear_elemento(etiqueta,contenido,idElementoPadre='body',id='',clase='',name='',arrayAtributosTitulo=null,arrayAtributosValores=null) {
+    if (dev_dom_existe_objeto(idElementoPadre)){
+        let attr = (dev_is_array(arrayAtributosTitulo,1) && dev_is_array(arrayAtributosValores,1)) ?
+            dev_dom_generar_string_atributos(arrayAtributosTitulo,arrayAtributosValores) :
+            null;
+        $('#'+idElementoPadre).append(`<${etiqueta} id="${id}" class="${clase}" name="${name}" ${attr}>${contenido}</${etiqueta}>`);
+        return true;
+    }
+    return false;
+}
+
+function dev_dom_generar_string_atributos(arrayAtributosTitulo,arrayAtributosValores) {
+    if (dev_is_array(arrayAtributosTitulo,1) && dev_is_array(arrayAtributosValores,1)){
+        var attr = '';
+        for(let i=0;i<arrayAtributosTitulo.length;i++){
+            attr += arrayAtributosTitulo[i]+'="'+arrayAtributosValores[i]+'" ';
+        }
+        return attr;
+    }
+    return false
+}
+
+function dev_buscar_dentro_de_elemento(idElementoPadre,busqueda) {
+
+}
+
+function dev_dom_es_etiqueta_html(t) {
+
 }
 
 /*HELP*/
