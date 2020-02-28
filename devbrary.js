@@ -494,6 +494,14 @@ function dev_string_reemplazar_expresion_regular(t,expresion,reemplazo) {
     }
 }
 
+function dev_dom_add_bootstrap() {
+    let bootstrap = '   ';
+    $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">');
+    $('head').append('<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>">');
+    $('head').append(`<script src="<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>">`);
+    $('head').append('<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>');
+}
+
 /*LLAMADA DE FUNCION MÁS BREVE*/
 
 function echo (texto){
