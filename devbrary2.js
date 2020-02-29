@@ -481,11 +481,25 @@ function dev_dom_generar_string_atributos(arrayAtributosTitulo,arrayAtributosVal
 }
 
 function dev_buscar_dentro_de_elemento(idElementoPadre,busqueda) {
-
+    if (dev_str_validar_longitud(idElementoPadre,1) && dev_str_validar_longitud(busqueda,1)){
+        idElementoPadre = dev_dom_es_etiqueta_html(idElementoPadre) ?
+            idElementoPadre :
+            '#'+idElementoPadre;
+        if(dev_dom_existe_objeto(idElementoPadre)){
+            busqueda = dev_dom_es_etiqueta_html(busqueda) ?
+                busqueda :
+                '#'+busqueda;
+            return $(idElementoPadre).find(busqueda);
+        }
+    }
+    return false;
 }
 
 function dev_dom_es_etiqueta_html(t) {
-
+    let array = ['a','abbr','address','area','article','aside','audio','b','base','bdi','bdo','blockquote','body','br','button','canvas','caption','cite','code','col','colgroup','colgroup','command','datalist','dd','del','details','dfn','dialog','div','dl','dt','em','embed','fieldset','figcaption','figure','figure','footer','form','h1','h6','head','header','hgroup','hr','html','i','iframe','img','input','ins','kbd','keygen','label','input','legend','fieldset','figure','details','li','link','map','mark','menu','meta','meter','nav','noscript','objet','ol','optgroup','option','output','p','param','pre','progress','q','rp','rt','ruby','s','samp','script','section','select','small','source','span','strong','style','sub','summary','details','sup','table','tbody','td','textarea','tfoot','th','thead','time','title','tr','track','ul','var','video','wbr'];
+    return (dev_str_validar_longitud(t,1)) ?
+        array.includes( t ) :
+        false;
 }
 
 /*HELP*/
