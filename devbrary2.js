@@ -171,6 +171,20 @@ function dev_test_tipo_dato(dato) {
     }
 }
 
+function dev_test_echo_titulo_valor(titulo,valor,delimitador=':') {
+    titulo      = dev_str_convertir_a_sting(titulo);
+    valor       = dev_str_convertir_a_sting(valor);
+    delimitador = dev_str_convertir_a_sting(delimitador);
+    delimitador = ' '+delimitador+' ';
+    echo(titulo+delimitador+valor);
+}
+
+function dev_test_depurar(condicion=false,obj=false) {
+    if(condicion){
+        dev_test_var_dump(obj);
+    }
+}
+
 /*STR*/
 
 function dev_str_quitar_espacios_blancos(texto) {
