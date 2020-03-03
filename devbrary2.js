@@ -471,11 +471,12 @@ function dev_dom_copiar_en_portapapeles(dato) {
 }
 
 function dev_dom_crear_elemento(etiqueta,contenido,idElementoPadre='body',id='',clase='',name='',arrayAtributosTitulo=null,arrayAtributosValores=null) {
+    idElementoPadre = dev_dom_str_a_id(idElementoPadre);
     if (dev_dom_existe_objeto(idElementoPadre)){
         let attr = (dev_is_array(arrayAtributosTitulo,1) && dev_is_array(arrayAtributosValores,1)) ?
             dev_dom_generar_string_atributos(arrayAtributosTitulo,arrayAtributosValores) :
             null;
-        $('#'+idElementoPadre).append(`<${etiqueta} id="${id}" class="${clase}" name="${name}" ${attr}>${contenido}</${etiqueta}>`);
+        $(idElementoPadre).append(`<${etiqueta} id="${id}" class="${clase}" name="${name}" ${attr}>${contenido}</${etiqueta}>`);
         return true;
     }
     return false;
@@ -494,13 +495,9 @@ function dev_dom_generar_string_atributos(arrayAtributosTitulo,arrayAtributosVal
 
 function dev_buscar_dentro_de_elemento(idElementoPadre,busqueda) {
     if (dev_str_validar_longitud(idElementoPadre,1) && dev_str_validar_longitud(busqueda,1)){
-        idElementoPadre = dev_dom_es_etiqueta_html(idElementoPadre) ?
-            idElementoPadre :
-            '#'+idElementoPadre;
+        idElementoPadre = dev_dom_str_a_id(idElementoPadre);
         if(dev_dom_existe_objeto(idElementoPadre)){
-            busqueda = dev_dom_es_etiqueta_html(busqueda) ?
-                busqueda :
-                '#'+busqueda;
+            busqueda = dev_dom_str_a_id(busqueda);
             return $(idElementoPadre).find(busqueda);
         }
     }
@@ -523,7 +520,9 @@ function dev_dom_es_etiqueta_html(t) {
 }
 
 function dev_dom_texto_existe_en_pagina(t) {
-    dev_str_incluye( ($('body').html()) ,t);
+    return (dev_is_string(t,1) && dev_str_incluye( ($('body').html()) ,t)) ?
+        dev_str_incluye( ($('body').html()) ,t) :
+        false;
 }
 
 function dev_dom_copiar_en_portapapeles_elemento(id,attr='value') {
