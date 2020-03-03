@@ -314,6 +314,18 @@ function dev_str_termina_con(t,busqueda) {
     return dev_is_string(t)? t.endsWith(busqueda) : false;
 }
 
+function dev_str_to_lower(t) {
+    return dev_is_string(t,1) ?
+        t.toLocaleLowerCase() :
+        false;
+}
+
+function dev_str_to_upper(t) {
+    return dev_is_string(t,1) ?
+        t.toUpperCase() :
+        false;
+}
+
 /*FORM*/
 
 function dev_form_email(t) {
@@ -347,8 +359,8 @@ function dev_form_input_numero(idSelect) {
 
 /*IS*/
 
-function dev_is_string(t) {
-    return dev_test_es_tipo_de_dato(t,'string');
+function dev_is_string(t,longitud=0) {
+    return dev_str_validar_longitud(t,longitud);
 }
 
 function dev_is_numero(obj) {
@@ -512,6 +524,62 @@ function dev_dom_es_etiqueta_html(t) {
 
 function dev_dom_texto_existe_en_pagina(t) {
     dev_str_incluye( ($('body').html()) ,t);
+}
+
+function dev_dom_copiar_en_portapapeles_elemento(id,attr='value') {
+    id   = dev_dom_str_a_id(id);
+    attr = dev_str_to_lower(dev_str_quitar_espacios_blancos(attr));
+    let valor;
+    if (dev_dom_existe_objeto(id) && dev_is_string(attr,1)){
+        switch (attr) {
+            case "value":
+            case "val":
+            case "v":
+                valor = $(id).val();
+                break;
+            case "id":
+            case "i":
+                valor = $(id).attr('id');
+                break;
+            case "name":
+            case "n":
+                valor = $(id).attr('name');
+                break;
+            case "class":
+            case "c":
+                valor = $(id).attr('class');
+                break;
+            case "html":
+            case "h":
+                valor = $(id).html();
+                break;
+            case "text":
+            case "t":
+                valor = $(id).text();
+                break;
+            default:
+                return false;
+        }
+
+        let $temp = $("<textarea>");
+        $("body").append($temp);
+        $temp.val(valor).select();
+        document.execCommand("copy");
+        $temp.remove();
+        return true;
+    }
+    return false;
+}
+
+function dev_dom_str_a_id(id) {
+    id = dev_str_quitar_espacios_blancos(id);
+    if (dev_str_validar_longitud(id)){
+        id = dev_dom_es_etiqueta_html(id) ?
+            (id) :
+            ('#'+id);
+        return id;
+    }
+    return false;
 }
 
 /*HELP*/
