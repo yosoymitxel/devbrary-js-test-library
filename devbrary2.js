@@ -113,7 +113,7 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
             if (Array.isArray(valorDato)) {
                 tipoDato = 'array';
                 if(imprimir) echo(`${tipoDato} (${valorDato.length}) "${valorDato}"`);
-                return 'array';
+                if(retornar) return 'array';
             }else if(valorDato == null){
                 if(imprimir) echo('NULL');
                 if(retornar) return 'null';
@@ -130,7 +130,7 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
             break;
         case 'boolean':
             if(imprimir) echo(tipoDato + ' "' + valorDato + '"');
-            return 'boolean';
+            if(retornar) return 'boolean';
             break;
         case 'undefined':
             if(imprimir) echo('La variable no está definida. (undefined)');
