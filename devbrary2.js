@@ -427,11 +427,11 @@ function dev_url_encode(t){
 
 /*DOM*/
 
-function dev_dom_agregar_bootstrap() {
-    $('head').append('<link id="bootstrap-css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">');
-    $('body').append(`<script id="jquery-js" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>`);
-    $('body').append(`<script id="popper-js" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>`);
-    $('body').append(`<script id="bootstrap-js" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>`);
+function dev_dom_agregar_bootstrap(versionBootstrap='4.4.1',versionJquery='3.4.1',versionPopper='1.16.0') {
+    $('head').append(`<link id="bootstrap-css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/${versionBootstrap}/css/bootstrap.min.css">`);
+    $('body').append(`<script id="jquery-js" src="https://ajax.googleapis.com/ajax/libs/jquery/${versionJquery}/jquery.min.js"></script>`);
+    $('body').append(`<script id="popper-js" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/${versionPopper}/umd/popper.min.js"></script>`);
+    $('body').append(`<script id="bootstrap-js" src="https://maxcdn.bootstrapcdn.com/bootstrap/${versionBootstrap}/js/bootstrap.min.js"></script>`);
 }
 
 function dev_dom_existe_elemento (idObjeto){
@@ -442,21 +442,21 @@ function dev_dom_existe_elemento (idObjeto){
 
             if(!dev_str_esta_vacio($(id).attr('id'))){
                 return true;
-            }else{
-                return false;
             }
+
         }else if(idObjeto.startsWith('.')){
             let id = idObjeto;
 
             if(!dev_str_esta_vacio($(id).attr('class'))){
                 return true;
-            }else{
-                return false;
+            }
+        }else if(dev_dom_es_etiqueta_html(idObjeto)){
+            if(($(id).length>0)){
+                return true;
             }
         }
-    }else{
-        return false;
     }
+    return false;
 }
 
 function dev_dom_value(idObjeto) {
@@ -545,7 +545,7 @@ function dev_dom_texto_existe_en_pagina(t) {
         false;
 }
 
-function dev_dom_copiar_en_portapapeles_elemento(id,attr='value') {
+function dev_dom_copiar_en_portapapeles_attr_elemento(id,attr='value') {
     id   = dev_dom_str_a_id(id);
     attr = dev_str_to_lower(dev_str_quitar_espacios_blancos(attr));
     let valor;
@@ -579,12 +579,7 @@ function dev_dom_copiar_en_portapapeles_elemento(id,attr='value') {
             default:
                 return false;
         }
-
-        let $temp = $("<textarea>");
-        $("body").append($temp);
-        $temp.val(valor).select();
-        document.execCommand("copy");
-        $temp.remove();
+        dev_dom_copiar_en_portapapeles(valor);
         return true;
     }
     return false;
@@ -621,6 +616,16 @@ function dev_dom_css_agregar(idElemento, atributos) {
     return false;
 }
 
+function dev_dom_es_unidad_de_medida(t) {
+    let arrayUnidades = ['px','%','vh','rem','em'];
+    for (let i=0; i<arrayUnidades.length;i++){
+        if (dev_str_termina_con(t,arrayUnidades[i])){
+            return true;
+        }
+    }
+    return false;
+}
+
 function dev_dom_cambiar_width_heigth(idElemento, width=null, height = null, minWidth = null, minHeight = null) {
     idElemento = dev_dom_str_a_id(idElemento);
     if(dev_dom_existe_elemento(idElemento)){
@@ -631,13 +636,7 @@ function dev_dom_cambiar_width_heigth(idElemento, width=null, height = null, min
         for (let i=0;i<4;i++){
             if(estilosArray[i] && (dev_is_numero(estilosArray[i]) || dev_is_numero(dev_str_conseguir_numero_string(estilosArray[i]))) ){
                 estilosArray[i] = dev_str_quitar_espacios_blancos(dev_str_to_lower(dev_str_convertir_a_sting(estilosArray[i])));
-                estilosArray[i] = (
-                    dev_str_termina_con(estilosArray[i],'px')  ||
-                    dev_str_termina_con(estilosArray[i],'%')   ||
-                    dev_str_termina_con(estilosArray[i],'vh')  ||
-                    dev_str_termina_con(estilosArray[i],'rem') ||
-                    dev_str_termina_con(estilosArray[i],'em')
-                ) ?
+                estilosArray[i] = ( dev_dom_es_unidad_de_medida(estilosArray[i]) ) ?
                 estilosArray[i] :
                 estilosArray[i]+'px';
 
