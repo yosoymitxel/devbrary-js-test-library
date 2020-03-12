@@ -6,7 +6,7 @@ function dev_test_echo(texto){
 
 function dev_test_var_dom_dump(idObjeto){
     let id = dev_is_string(idObjeto)? idObjeto : null;
-    if(dev_dom_existe_objeto(idObjeto)){
+    if(dev_dom_existe_elemento(idObjeto)){
         echo('Objeto: ');
         echo($(id));
         echo('Id   : '+$(id).attr('id'));
@@ -434,7 +434,7 @@ function dev_dom_agregar_bootstrap() {
     $('body').append(`<script id="bootstrap-js" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>`);
 }
 
-function dev_dom_existe_objeto (idObjeto){
+function dev_dom_existe_elemento (idObjeto){
     if(dev_is_string(idObjeto)){
         idObjeto = dev_str_quitar_espacios_blancos(idObjeto);
         if((!idObjeto.startsWith('#') && !idObjeto.startsWith('.')) || idObjeto.startsWith('#')){
