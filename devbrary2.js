@@ -117,7 +117,7 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
             }else if(valorDato == null){
                 if(imprimir) echo('NULL');
                 if(retornar) return 'null';
-            }else if(dev_dom_existe_objeto($(dato).attr('id'))){
+            }else if(dev_dom_existe_elemento($(dato).attr('id'))){
                 dev_test_var_dom_dump($(dato).attr('id'));
             }else if(dato !== undefined && dato !== null && dato.constructor == Object){
                 if(imprimir) echo('Objeto de tipo JSON');
@@ -157,7 +157,7 @@ function dev_test_tipo_dato(dato) {
                 return 'array';
             }else if(valorDato == null){
                 return 'null';
-            }else if(dev_dom_existe_objeto($(dato).attr('id'))){
+            }else if(dev_dom_existe_elemento($(dato).attr('id'))){
                 return 'dom';
             }else if(dato !== undefined && dato !== null && dato.constructor == Object){
                 return 'json';
@@ -234,12 +234,18 @@ function dev_str_quitar_espacios_extra(texto){
     return texto;
 }
 
-function dev_str_conseguir_numero_string(texto){
-    let numero =  texto.match(/\d+/g);
+function dev_str_conseguir_numero_string (texto,returnArray=false){
+    if(dev_is_numero(texto)){
+        return texto;
+    }else if (dev_is_string(texto)){
+        let numero =  texto.match(/\d+/g);
 
-    //Se valida si es es un array, hay caso (como el segundo) donde no sale un número directamente sino un array
-    numero = Array.isArray(numero)?numero.join(''):numero;
-    return numero;
+        //Se valida si es es un array, hay caso (como el segundo) donde no sale un número directamente sino un array
+        numero = Array.isArray(numero && !returnArray)?numero.join(''):numero;
+        return numero;
+    }
+
+    return false;
 }
 
 function dev_str_separador_unidad_mil(numero){
@@ -286,7 +292,7 @@ function dev_str_validar_longitud(t,longitud = 1) {
 }
 
 function dev_str_convertir_a_sting(t) {
-    if(!dev_is_string(t)){
+    if(!dev_test_es_tipo_de_dato(t,'string')){
         switch (dev_test_tipo_dato(t)){
             case 'int':
             case 'boolean':
@@ -374,7 +380,7 @@ function dev_form_input_numero(idSelect) {
 /*IS*/
 
 function dev_is_string(t,longitud=0) {
-    return dev_str_validar_longitud(t,longitud);
+    return (!dev_str_esta_vacio(t) && t.length>=longitud);
 }
 
 function dev_is_numero(obj) {
@@ -428,7 +434,7 @@ function dev_dom_agregar_bootstrap() {
     $('body').append(`<script id="bootstrap-js" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>`);
 }
 
-function dev_dom_existe_objeto(idObjeto){
+function dev_dom_existe_objeto (idObjeto){
     if(dev_is_string(idObjeto)){
         idObjeto = dev_str_quitar_espacios_blancos(idObjeto);
         if((!idObjeto.startsWith('#') && !idObjeto.startsWith('.')) || idObjeto.startsWith('#')){
@@ -454,7 +460,7 @@ function dev_dom_existe_objeto(idObjeto){
 }
 
 function dev_dom_value(idObjeto) {
-    return dev_dom_existe_objeto(t_trim(idObjeto))? $(dev_dom_objeto(idObjeto)).val() : false;
+    return dev_dom_existe_elemento(t_trim(idObjeto))? $(dev_dom_objeto(idObjeto)).val() : false;
 }
 
 function dev_dom_objeto(idObjeto,buscarTodo=false) {
@@ -486,7 +492,7 @@ function dev_dom_copiar_en_portapapeles(dato) {
 
 function dev_dom_crear_elemento(etiqueta,contenido,idElementoPadre='body',id='',clase='',name='',arrayAtributosTitulo=null,arrayAtributosValores=null) {
     idElementoPadre = dev_dom_str_a_id(idElementoPadre);
-    if (dev_dom_existe_objeto(idElementoPadre)){
+    if (dev_dom_existe_elemento(idElementoPadre)){
         let attr = (dev_is_array(arrayAtributosTitulo,1) && dev_is_array(arrayAtributosValores,1)) ?
             dev_dom_generar_string_atributos(arrayAtributosTitulo,arrayAtributosValores) :
             null;
@@ -510,7 +516,7 @@ function dev_dom_generar_string_atributos(arrayAtributosTitulo,arrayAtributosVal
 function dev_buscar_dentro_de_elemento(idElementoPadre,busqueda) {
     if (dev_str_validar_longitud(idElementoPadre,1) && dev_str_validar_longitud(busqueda,1)){
         idElementoPadre = dev_dom_str_a_id(idElementoPadre);
-        if(dev_dom_existe_objeto(idElementoPadre)){
+        if(dev_dom_existe_elemento(idElementoPadre)){
             busqueda = dev_dom_str_a_id(busqueda);
             return $(idElementoPadre).find(busqueda);
         }
@@ -543,7 +549,7 @@ function dev_dom_copiar_en_portapapeles_elemento(id,attr='value') {
     id   = dev_dom_str_a_id(id);
     attr = dev_str_to_lower(dev_str_quitar_espacios_blancos(attr));
     let valor;
-    if (dev_dom_existe_objeto(id) && dev_is_string(attr,1)){
+    if (dev_dom_existe_elemento(id) && dev_is_string(attr,1)){
         switch (attr) {
             case "value":
             case "val":
@@ -591,6 +597,92 @@ function dev_dom_str_a_id(id) {
             (id) :
             ('#'+id);
         return id;
+    }
+    return false;
+}
+
+function dev_dom_css_reemplazar(idElemento, atributos) {
+    idElemento = dev_dom_str_a_id(idElemento);
+    if(dev_dom_existe_elemento(idElemento)){
+        $(idElemento).css('');
+        $(idElemento).css(atributoActual + atributos);
+        return true;
+    }
+    return false;
+}
+
+function dev_dom_css_agregar(idElemento, atributos) {
+    idElemento = dev_dom_str_a_id(idElemento);
+    if(dev_dom_existe_elemento(idElemento)){
+        let atributoActual = dev_dom_get_valor_atributo(idElemento);
+        $(idElemento).css(atributoActual + atributos);
+        return true;
+    }
+    return false;
+}
+
+function dev_dom_cambiar_width_heigth(idElemento, width=null, height = null, minWidth = null, minHeight = null) {
+    idElemento = dev_dom_str_a_id(idElemento);
+    if(dev_dom_existe_elemento(idElemento)){
+        let estilosArray       = [width, height, minWidth, minHeight];
+        let estilosTituloArray = ['width', 'height', 'min-width', 'min-height'];
+        let atributos          = '';
+
+        for (let i=0;i<4;i++){
+            if(estilosArray[i] && (dev_is_numero(estilosArray[i]) || dev_is_numero(dev_str_conseguir_numero_string(estilosArray[i]))) ){
+                estilosArray[i] = dev_str_quitar_espacios_blancos(dev_str_to_lower(dev_str_convertir_a_sting(estilosArray[i])));
+                estilosArray[i] = (
+                    dev_str_termina_con(estilosArray[i],'px')  ||
+                    dev_str_termina_con(estilosArray[i],'%')   ||
+                    dev_str_termina_con(estilosArray[i],'vh')  ||
+                    dev_str_termina_con(estilosArray[i],'rem') ||
+                    dev_str_termina_con(estilosArray[i],'em')
+                ) ?
+                estilosArray[i] :
+                estilosArray[i]+'px';
+
+            }else {
+                estilosArray[i] = false;
+            }
+
+        }
+
+        for (let i=0;i<4;i++){
+            if(estilosArray[i]){
+                atributos = estilosTituloArray[i]+':'+estilosArray[i]+' ';
+            }
+
+        }
+        return dev_dom_style_agregar(idElemento,atributos);
+    }
+
+    return false;
+}
+
+function dev_dom_style_agregar(idElemento,atributos) {
+    idElemento = dev_dom_str_a_id(idElemento);
+    if(dev_dom_existe_elemento(idElemento)){
+        let estilos = $(idElemento).attr('style') ? $(idElemento).attr('style') : '';
+        $(idElemento).attr('style',estilos+atributos);
+        return true;
+    }
+    return false;
+}
+
+function dev_dom_style_reemplazar(idElemento,atributos) {
+    idElemento = dev_dom_str_a_id(idElemento);
+    if(dev_dom_existe_elemento(idElemento)){
+        $(idElemento).attr('style','');
+        $(idElemento).attr('style',estilos+atributos);
+        return true;
+    }
+    return false;
+}
+
+function dev_dom_get_valor_atributo(idElemento, atributo='val') {
+    idElemento = dev_dom_str_a_id(idElemento);
+    if(dev_dom_existe_elemento(idElemento)){
+        return $(idElemento).attr(atributo);
     }
     return false;
 }
@@ -667,9 +759,6 @@ function var_dump (texto){
 }
 function var_dom_dump (texto){
     dev_test_var_dom_dump(texto);
-}
-function string_isset(t,longitud = 1) {
-    return dev_str_validar_longitud(t,longitud);
 }
 function t_trim(t) {
     return dev_str_quitar_espacios_extra(t);
