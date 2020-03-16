@@ -425,6 +425,27 @@ function dev_url_encode(t){
     return encodeURIComponent(t)
 }
 
+function dev_url_get_host(url) {
+    if(dev_form_url(url)){
+        let link = dev_url_string_a_url(url);
+        return link.hostname;
+    }
+    return false;
+}
+
+function dev_url_pagina_existe(url) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.send();
+    return !(request.status === "404");
+}
+
+function dev_url_string_a_url(url) {
+    let link = document.createElement('a');
+    link.href = url;
+    return link;
+}
+
 /*DOM*/
 
 function dev_dom_agregar_bootstrap(versionBootstrap='4.4.1',versionJquery='3.4.1',versionPopper='1.16.0') {
@@ -432,6 +453,28 @@ function dev_dom_agregar_bootstrap(versionBootstrap='4.4.1',versionJquery='3.4.1
     $('body').append(`<script id="jquery-js" src="https://ajax.googleapis.com/ajax/libs/jquery/${versionJquery}/jquery.min.js"></script>`);
     $('body').append(`<script id="popper-js" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/${versionPopper}/umd/popper.min.js"></script>`);
     $('body').append(`<script id="bootstrap-js" src="https://maxcdn.bootstrapcdn.com/bootstrap/${versionBootstrap}/js/bootstrap.min.js"></script>`);
+}
+
+function dev_dom_agregar_js(url,titulo='') {
+    if(dev_form_url(url) && dev_url_pagina_existe(url)){
+        titulo = dev_is_string(titulo,1) ?
+            titulo:
+            dev_url_get_host(url);
+        $('body').append(`<script id="${titulo}" src="${url}"></script>`);
+        return true;
+    }
+    return false;
+}
+
+function dev_dom_agregar_css(url,titulo='') {
+    if(dev_form_url(url) && dev_url_pagina_existe(url)){
+        titulo = dev_is_string(titulo,1) ?
+        titulo:
+        dev_url_get_host(url);
+        $('head').append(`<link id="${titulo}" rel="stylesheet" href="${url}">`);
+        return true;
+    }
+    return false;
 }
 
 function dev_dom_existe_elemento (idObjeto){
@@ -617,6 +660,7 @@ function dev_dom_css_agregar(idElemento, atributos) {
 }
 
 function dev_dom_es_unidad_de_medida(t) {
+    t = dev_str_convertir_a_sting(t);
     let arrayUnidades = ['px','%','vh','rem','em'];
     for (let i=0; i<arrayUnidades.length;i++){
         if (dev_str_termina_con(t,arrayUnidades[i])){
@@ -637,8 +681,8 @@ function dev_dom_cambiar_width_heigth(idElemento, width=null, height = null, min
             if(estilosArray[i] && (dev_is_numero(estilosArray[i]) || dev_is_numero(dev_str_conseguir_numero_string(estilosArray[i]))) ){
                 estilosArray[i] = dev_str_quitar_espacios_blancos(dev_str_to_lower(dev_str_convertir_a_sting(estilosArray[i])));
                 estilosArray[i] = ( dev_dom_es_unidad_de_medida(estilosArray[i]) ) ?
-                estilosArray[i] :
-                estilosArray[i]+'px';
+                    estilosArray[i] :
+                    estilosArray[i]+'px';
 
             }else {
                 estilosArray[i] = false;
@@ -650,7 +694,6 @@ function dev_dom_cambiar_width_heigth(idElemento, width=null, height = null, min
             if(estilosArray[i]){
                 atributos = estilosTituloArray[i]+':'+estilosArray[i]+' ';
             }
-
         }
         return dev_dom_style_agregar(idElemento,atributos);
     }
