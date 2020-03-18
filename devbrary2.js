@@ -1,7 +1,12 @@
 /*Test*/
 
-function dev_test_echo(texto){
-    console.log(texto);
+function dev_test_echo(texto,valor=false){
+    if(!valor){
+        console.log(texto);
+    }else{
+        console.log(texto+' : '+valor);
+    }
+
 }
 
 function dev_test_var_dom_dump(idObjeto){
@@ -449,10 +454,10 @@ function dev_url_string_a_url(url) {
 /*DOM*/
 
 function dev_dom_agregar_bootstrap(versionBootstrap='4.4.1',versionJquery='3.4.1',versionPopper='1.16.0') {
-    $('head').append(`<link id="bootstrap-css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/${versionBootstrap}/css/bootstrap.min.css">`);
-    $('body').append(`<script id="jquery-js" src="https://ajax.googleapis.com/ajax/libs/jquery/${versionJquery}/jquery.min.js"></script>`);
-    $('body').append(`<script id="popper-js" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/${versionPopper}/umd/popper.min.js"></script>`);
-    $('body').append(`<script id="bootstrap-js" src="https://maxcdn.bootstrapcdn.com/bootstrap/${versionBootstrap}/js/bootstrap.min.js"></script>`);
+    dev_dom_agregar_css(`https://maxcdn.bootstrapcdn.com/bootstrap/${versionBootstrap}/css/bootstrap.min.css`,'bootstrap-css');
+    dev_dom_agregar_js(`https://ajax.googleapis.com/ajax/libs/jquery/${versionJquery}/jquery.min.js`,'jquery-js');
+    dev_dom_agregar_js(`https://cdnjs.cloudflare.com/ajax/libs/popper.js/${versionPopper}/umd/popper.min.js`,'popper-js');
+    dev_dom_agregar_js(`https://maxcdn.bootstrapcdn.com/bootstrap/${versionBootstrap}/js/bootstrap.min.js`,'bootstrap-js');
 }
 
 function dev_dom_agregar_js(url,titulo='') {
@@ -517,12 +522,9 @@ function dev_dom_objeto(idObjeto,buscarTodo=false) {
             }else{
                 return $(id)[0];
             }
-        }else{
-            return false;
         }
-    }else{
-        return false;
     }
+    return false;
 }
 
 function dev_dom_copiar_en_portapapeles(dato) {
@@ -715,7 +717,7 @@ function dev_dom_style_reemplazar(idElemento,atributos) {
     idElemento = dev_dom_str_a_id(idElemento);
     if(dev_dom_existe_elemento(idElemento)){
         $(idElemento).attr('style','');
-        $(idElemento).attr('style',estilos+atributos);
+        $(idElemento).attr('style',atributos);
         return true;
     }
     return false;
