@@ -359,7 +359,7 @@ function dev_form_email(t) {
 
 function dev_form_url(t) {
     let re = /^(file|http?:\/\/|https?:\/\/)\w+\.\w+/;
-    return t.match(re);
+    return re.test(t);
 }
 
 function dev_form_text_area(idObjeto,longitud=0) {
@@ -485,7 +485,12 @@ function dev_dom_agregar_css(url,titulo='') {
 function dev_dom_existe_elemento (idObjeto){
     if(dev_is_string(idObjeto)){
         idObjeto = dev_str_quitar_espacios_blancos(idObjeto);
-        if((!idObjeto.startsWith('#') && !idObjeto.startsWith('.')) || idObjeto.startsWith('#')){
+        if(dev_dom_es_etiqueta_html(idObjeto)){
+            if(($(idObjeto).length>0)){
+                return true;
+            }
+
+        }else if((!idObjeto.startsWith('#') && !idObjeto.startsWith('.')) || idObjeto.startsWith('#')){
             let id = idObjeto.startsWith('#')?idObjeto:'#'+idObjeto;
 
             if(!dev_str_esta_vacio($(id).attr('id'))){
@@ -496,10 +501,6 @@ function dev_dom_existe_elemento (idObjeto){
             let id = idObjeto;
 
             if(!dev_str_esta_vacio($(id).attr('class'))){
-                return true;
-            }
-        }else if(dev_dom_es_etiqueta_html(idObjeto)){
-            if(($(id).length>0)){
                 return true;
             }
         }
@@ -633,7 +634,7 @@ function dev_dom_copiar_en_portapapeles_attr_elemento(id,attr='value') {
 function dev_dom_str_a_id(id) {
     id = dev_str_quitar_espacios_blancos(id);
     if (dev_str_validar_longitud(id)){
-        id = dev_dom_es_etiqueta_html(id) ?
+        id = dev_dom_es_etiqueta_html(id) || dev_str_inicia_con(id,'#') || dev_str_inicia_con(id,'.') ?
             (id) :
             ('#'+id);
         return id;
@@ -661,15 +662,18 @@ function dev_dom_css_agregar(idElemento, atributos) {
     return false;
 }
 
-function dev_dom_es_unidad_de_medida(t) {
+function dev_dom_str_a_unidad_de_medida(t) {
     t = dev_str_convertir_a_sting(t);
     let arrayUnidades = ['px','%','vh','rem','em'];
+
     for (let i=0; i<arrayUnidades.length;i++){
         if (dev_str_termina_con(t,arrayUnidades[i])){
-            return true;
+            return arrayUnidades[i];
         }
     }
-    return false;
+
+    t = dev_str_conseguir_numero_string(t);
+    return (dev_is_numero(t)) ? t+'px': false;
 }
 
 function dev_dom_cambiar_width_heigth(idElemento, width=null, height = null, minWidth = null, minHeight = null) {
@@ -682,9 +686,7 @@ function dev_dom_cambiar_width_heigth(idElemento, width=null, height = null, min
         for (let i=0;i<4;i++){
             if(estilosArray[i] && (dev_is_numero(estilosArray[i]) || dev_is_numero(dev_str_conseguir_numero_string(estilosArray[i]))) ){
                 estilosArray[i] = dev_str_quitar_espacios_blancos(dev_str_to_lower(dev_str_convertir_a_sting(estilosArray[i])));
-                estilosArray[i] = ( dev_dom_es_unidad_de_medida(estilosArray[i]) ) ?
-                    estilosArray[i] :
-                    estilosArray[i]+'px';
+                estilosArray[i] = dev_dom_str_a_unidad_de_medida(estilosArray[i]);
 
             }else {
                 estilosArray[i] = false;
@@ -730,6 +732,82 @@ function dev_dom_get_valor_atributo(idElemento, atributo='val') {
     }
     return false;
 }
+
+function dev_dom_crear_iframe(url,idElementoPadre='body',id='iframe',clases='',width='',height='',arrayAtributosTitulo=null,arrayAtributosValores=null) {
+    idElementoPadre = dev_dom_str_a_id(idElementoPadre);
+
+    if(dev_form_url(url) && dev_url_pagina_existe(url) && dev_dom_existe_elemento(idElementoPadre)){
+        width  = dev_dom_str_a_unidad_de_medida(width);
+        width  = width  ? width  : '';
+
+        height = dev_dom_str_a_unidad_de_medida(height);
+        height = height ? height : '';
+
+        let arrayTituloValor = dev_dom_generar_array_titulo_valor(dev_arr_unir_arrays(['src','width','height'],arrayAtributosTitulo),dev_arr_unir_arrays([url,width,height], arrayAtributosValores));
+
+        return dev_dom_crear_elemento('iframe','',idElementoPadre,id,clases,'',arrayTituloValor[0],arrayTituloValor[1]);
+    }
+
+    return false;
+}
+
+function dev_dom_generar_array_titulo_valor(arrayAtributosTitulo,arrayAtributosValores) {
+    if(dev_is_array(arrayAtributosTitulo) && dev_is_array(arrayAtributosValores)){
+
+        let arrayTituloValor = new Array(2);
+        let arrayTitulo      = [];
+        let arrayValores     = [];
+        let j                = 0;
+
+        for (let i=0; i<arrayAtributosTitulo.length; i++){
+            if(dev_is_string(dev_str_convertir_a_sting(arrayAtributosTitulo [i]),1) &&
+                dev_is_string(dev_str_convertir_a_sting(arrayAtributosValores[i]),1) ){
+                arrayTitulo .push(arrayAtributosTitulo [i]);
+                arrayValores.push(arrayAtributosValores[i]);
+                j++;
+            }
+        }
+
+        if (j>0){
+            arrayTituloValor[0] = arrayTitulo;
+            arrayTituloValor[1] = arrayValores;
+            return arrayTituloValor;
+        }
+        return false;
+    }else
+    if( dev_is_string(dev_str_convertir_a_sting(arrayAtributosTitulo), 1) &&
+        dev_is_string(dev_str_convertir_a_sting(arrayAtributosValores),1) ){
+
+        arrayTituloValor[0] = arrayAtributosTitulo;
+        arrayTituloValor[1] = arrayAtributosValores;
+        return arrayTituloValor;
+    }
+    return false;
+}
+
+function dev_dom_crear_cerrado() {
+    
+}
+
+function dev_dom_personalizado() {
+    
+}
+/*Array*/
+
+function dev_arr_unir_arrays(array1,array2) {
+    let result;
+    if (dev_is_array(array1) && dev_is_array(array2)){
+        result = array1.concat(array2);
+    }else if(dev_is_array(array1)){
+        result = array1;
+    }else if(dev_is_array(array2)){
+        result = array2;
+    }else{
+        result = false;
+    }
+    return result;
+}
+
 
 /*HELP*/
 
@@ -795,8 +873,8 @@ function dev_html_permitir_caracteres_input( permitidos, elEvento = event) {
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
 
-function echo (texto){
-    dev_test_echo(texto);
+function echo (texto,valor=false){
+    dev_test_echo(texto,valor);
 }
 function var_dump (texto){
     dev_test_var_dump(texto);
