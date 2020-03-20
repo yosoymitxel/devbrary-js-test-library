@@ -284,6 +284,7 @@ function dev_str_esta_vacio(texto){
 }
 
 function dev_str_reemplazar_expresion_regular(t,expresion,reemplazo) {
+    expresion = dev_str_corregir_expresion_regular(expresion);
     if(dev_is_string(t) && dev_str_incluye_reg(t,expresion)){
         var re = new RegExp(expresion,'g');
         return t.replace(re,reemplazo);
@@ -319,8 +320,15 @@ function dev_str_incluye(t,busqueda) {
 }
 
 function dev_str_incluye_reg(t,expresion) {
+    expresion = dev_str_corregir_expresion_regular(expresion);
     let expreg = new RegExp(expresion);
     return dev_is_string(t)?expreg.test(t):false;
+}
+
+function dev_str_corregir_expresion_regular(expresion){
+    return (dev_str_inicia_con(expresion,'/') && dev_str_termina_con(expresion,'/')) ?
+        expresion.substring(1,expresion.lenght-1) :
+        expresion;
 }
 
 function dev_str_primera_letra_mayuscula(texto){
@@ -354,12 +362,12 @@ function dev_str_to_upper(t) {
 /*FORM*/
 
 function dev_form_email(t) {
-    return ( (/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+/.test(t)) );
+    return ( (/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+/.test(t)) && dev_str_quitar_espacios_blancos(t) == t);
 }
 
-function dev_form_url(t) {
+function dev_form_url(t,validarExistencia=false) {
     let re = /^(file|http?:\/\/|https?:\/\/)\w+\.\w+/;
-    return re.test(t);
+    return (!validarExistencia) ? re.test(t) && dev_str_quitar_espacios_blancos(t) == t : re.test(t) && dev_url_pagina_existe(t) && dev_str_quitar_espacios_blancos(t) == t;
 }
 
 function dev_form_text_area(idObjeto,longitud=0) {
@@ -451,6 +459,15 @@ function dev_url_string_a_url(url) {
     return link;
 }
 
+function dev_url_abrir_enlace(url,target='') {
+    url = dev_str_quitar_espacios_blancos(url);
+    if(dev_url_pagina_existe(url)){
+        window.open(url, target);
+        return true;
+    }
+    return false;
+}
+
 /*DOM*/
 
 function dev_dom_agregar_bootstrap(versionBootstrap='4.4.1',versionJquery='3.4.1',versionPopper='1.16.0') {
@@ -474,8 +491,8 @@ function dev_dom_agregar_js(url,titulo='') {
 function dev_dom_agregar_css(url,titulo='') {
     if(dev_form_url(url) && dev_url_pagina_existe(url)){
         titulo = dev_is_string(titulo,1) ?
-        titulo:
-        dev_url_get_host(url);
+            titulo:
+            dev_url_get_host(url);
         $('head').append(`<link id="${titulo}" rel="stylesheet" href="${url}">`);
         return true;
     }
@@ -580,9 +597,7 @@ function dev_dom_es_etiqueta_html(t) {
         'pre','progress','q','rp','rt','ruby','s','samp','script','section','select','small','source','span',
         'strong','style','sub','summary','details','sup','table','tbody','td','textarea','tfoot','th','thead',
         'time','title','tr','track','ul','var','video','wbr'];
-    return (dev_str_validar_longitud(t,1)) ?
-        array.includes( t ) :
-        false;
+    return (dev_str_validar_longitud(t,1) && dev_arr_incluye_texto(array,t));
 }
 
 function dev_dom_texto_existe_en_pagina(t) {
@@ -635,11 +650,11 @@ function dev_dom_str_a_id(id) {
     id = dev_str_quitar_espacios_blancos(id);
     if (dev_str_validar_longitud(id)){
         id = dev_dom_es_etiqueta_html(id) || dev_str_inicia_con(id,'#') || dev_str_inicia_con(id,'.') ?
-            (id) :
-            ('#'+id);
+            dev_str_quitar_espacios_blancos((id) ):
+            dev_str_quitar_espacios_blancos(('#'+id));
         return id;
     }
-    return false;
+    return '';
 }
 
 function dev_dom_css_reemplazar(idElemento, atributos) {
@@ -753,7 +768,6 @@ function dev_dom_crear_iframe(url,idElementoPadre='body',id='iframe',clases='',w
 
 function dev_dom_generar_array_titulo_valor(arrayAtributosTitulo,arrayAtributosValores) {
     if(dev_is_array(arrayAtributosTitulo) && dev_is_array(arrayAtributosValores)){
-
         let arrayTituloValor = new Array(2);
         let arrayTitulo      = [];
         let arrayValores     = [];
@@ -786,12 +800,42 @@ function dev_dom_generar_array_titulo_valor(arrayAtributosTitulo,arrayAtributosV
 }
 
 function dev_dom_crear_cerrado() {
-    
+
 }
 
-function dev_dom_personalizado() {
-    
+function dev_dom_crear_elemento_personalizado(etiqueta,contenido='',idElementoPadre='body',id='',clases='',arrayAtributosTitulo=null,arrayAtributosValores=null,etiquetaCerrada=true) {
+    idElementoPadre = dev_dom_str_a_id(idElementoPadre);
+    if(dev_is_string(etiqueta,1) && dev_dom_existe_elemento(idElementoPadre)){
+        let atributos = dev_dom_generar_string_atributos(arrayAtributosTitulo.push('class'),arrayAtributosValores.push(clases));
+        let elemento  = `<${etiqueta} id="${id}" ${atributos}>${contenido}`;
+        elemento      = (etiquetaCerrada) ? elemento+`</${etiqueta}>` : elemento ;
+        return dev_dom_agregar_html(elemento,idElementoPadre);
+    }
+    return false;
 }
+
+function dev_dom_generar_texto_de_html(etiqueta,contenido='',id='',clases='',arrayAtributosTitulo=null,arrayAtributosValores=null,etiquetaCerrada=true) {
+    if(dev_is_string(etiqueta,1)){
+        let atributos = dev_dom_generar_string_atributos(arrayAtributosTitulo.push('class'),arrayAtributosValores.push(clases));
+        let elemento  = `<${etiqueta} id="${id}" ${atributos}>${contenido}`;
+        return(etiquetaCerrada) ? elemento+`</${etiqueta}>` : elemento ;
+    }
+    return false;
+}
+
+function dev_dom_agregar_html(textoHtml,idElementoPadre,alFinal=true) {
+    idElementoPadre = dev_dom_str_a_id(idElementoPadre);
+    if (dev_dom_existe_elemento(idElementoPadre) && dev_str_incluye_reg(textoHtml,/(<)(.|\n)+(>)$/)){
+        if (alFinal){
+            $(idElementoPadre).append(textoHtml);
+        }else {
+            $(idElementoPadre).prepend(textoHtml);
+        }
+        return true;
+    }
+    return false;
+}
+
 /*Array*/
 
 function dev_arr_unir_arrays(array1,array2) {
@@ -808,6 +852,12 @@ function dev_arr_unir_arrays(array1,array2) {
     return result;
 }
 
+function dev_arr_incluye_texto(array,t,logitudTexto=1) {
+    if(dev_is_array(array) && dev_is_string(t,logitudTexto)){
+        return array.includes(t);
+    }
+    return false;
+}
 
 /*HELP*/
 
@@ -869,6 +919,10 @@ function dev_html_permitir_caracteres_input( permitidos, elEvento = event) {
     // Comprobar si la tecla pulsada se encuentra en los caracteres permitidos
     // o si es una tecla especial
     return permitidos.indexOf(caracter) != -1 || tecla_especial;
+}
+
+function dev_html_no_permitir_espacios() {
+
 }
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
