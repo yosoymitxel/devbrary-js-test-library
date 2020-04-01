@@ -836,6 +836,40 @@ function dev_dom_agregar_html(textoHtml,idElementoPadre,alFinal=true) {
     return false;
 }
 
+function dev_dom_agregar_jquery(version='1.3.1',etiquetaPadre='head',logCargado=false) {
+    etiquetaPadre = dev_dom_es_etiqueta_html(etiquetaPadre) ? etiquetaPadre : 'head';
+    // agregamos archivo-ltr.css o archivo-rtl.css
+    let script = document.createElement( "script" );
+    script.type = "text/javascript";
+    script.src = `https://ajax.googleapis.com/ajax/libs/jquery/${version}/jquery.min.js`;
+    if(logCargado){
+        script.onload = function () {
+            echo('JQuery '+version+' ha sido cargado correctamente');
+        };
+    }
+
+    document.getElementsByTagName(etiquetaPadre)[0].appendChild(script);
+}
+
+function dev_dom_convertir_html_a_jpg(idElemento,nombreArchivo='screenshot-'+dev_str_sin_caracteres_especiales(dev_fec_fecha_actual()),mostrarLogCargado){
+    $.getScript( "http://www.linkea.ga/assets/js/htmltocanvas.js", function( data, textStatus, jqxhr ) {
+            console.log( "htmltocanvas: Fue cargado correctamente." );
+    });
+    $.getScript( "http://www.linkea.ga/assets/js/filesaver.js", function( data, textStatus, jqxhr ) {
+        console.log( "filesaver: Fue cargado correctamente." );
+    });
+
+    idElemento = dev_dom_str_a_id(idElemento);
+        html2canvas($(idElemento), {
+            onrendered: function(canvas) {
+                theCanvas = canvas;
+                canvas.toBlob(function(blob) {
+                    saveAs(blob, nombreArchivo+".jpg");
+                });
+            }
+        });
+}
+
 /*Array*/
 
 function dev_arr_unir_arrays(array1,array2) {
