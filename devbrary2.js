@@ -720,6 +720,7 @@ function dev_dom_cambiar_width_heigth(idElemento, width=null, height = null, min
     return false;
 }
 
+
 function dev_dom_style_agregar(idElemento,atributos) {
     idElemento = dev_dom_str_a_id(idElemento);
     if(dev_dom_existe_elemento(idElemento)){
@@ -799,8 +800,10 @@ function dev_dom_generar_array_titulo_valor(arrayAtributosTitulo,arrayAtributosV
     return false;
 }
 
-function dev_dom_crear_cerrado() {
-
+function dev_dom_crear_elemento_con_string(etiqueta,contenido='',idElementoPadre='body',atributos='',cerrado=true) {
+    let elemento = `<${etiqueta} ${atributos}>${contenido}`;
+    elemento    += (cerrado) ? `</${etiqueta}>` : '';
+    return dev_dom_agregar_html(elemento,idElementoPadre);
 }
 
 function dev_dom_crear_elemento_personalizado(etiqueta,contenido='',idElementoPadre='body',id='',clases='',arrayAtributosTitulo=null,arrayAtributosValores=null,etiquetaCerrada=true) {
@@ -901,16 +904,16 @@ function dev_01_help(nombreDeFuncion=''){
 
 /*HTML*/
 
-function dev_html_permitir_caracteres_input( permitidos, elEvento = event) {
+function dev_html_permitir_caracteres_input( permitidos, elEvento = event,caracteresExtra='') {
     //Se usa con onkeypress
     // onkeypress="return dev_html_permitir_caracteres_input('num')"
     // onkeypress="return dev_html_permitir_caracteres_input('car')"
     // onkeypress="return dev_html_permitir_caracteres_input('num_car')"
     // Variables que definen los caracteres permitidos
-    let numeros = "0123456789";
-    let caracteres = " abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    let numeros            = "0123456789"+caracteresExtra;
+    let caracteres         = " abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ"+caracteresExtra;
     let numeros_caracteres = numeros + caracteres;
-    let teclas_especiales = [8, 37, 39, 46];
+    let teclas_especiales  = [8, 37, 39, 46];
     // 8 = BackSpace, 46 = Supr, 37 = flecha izquierda, 39 = flecha derecha
 
 
@@ -955,8 +958,44 @@ function dev_html_permitir_caracteres_input( permitidos, elEvento = event) {
     return permitidos.indexOf(caracter) != -1 || tecla_especial;
 }
 
-function dev_html_no_permitir_espacios() {
+function dev_html_limitar_input(cantidadCaracteres,evento=event) {
+    let elemento  = (evento.srcElement);
+    let unicode   = evento.keyCode? evento.keyCode : evento.charCode;
+    let contenido = dev_str_convertir_a_sting($(elemento).val());
 
+    // Permitimos las siguientes teclas:
+    // 8 backspace
+    // 46 suprimir
+    // 13 enter
+    // 9 tabulador
+    // 37 izquierda
+    // 39 derecha
+    // 38 subir
+    // 40 bajar
+
+    if(unicode==8 || unicode==46 || unicode==13 || unicode==9 || unicode==37 || unicode==39 || unicode==38 || unicode==40){
+        return true;
+    }
+
+    // Si ha superado el limite de caracteres devolvemos false
+    return (!contenido.length>=cantidadCaracteres);
+}
+
+function dev_html_no_permitir_espacios_input(evento=event) {
+    let elemento   = (evento.srcElement);
+    let unicode    = evento.keyCode? evento.keyCode : evento.charCode;
+    let contenido  = dev_str_convertir_a_sting($(elemento).val());
+    if(unicode==9 || unicode==20 || unicode==13){
+        return false;
+    }
+}
+
+function dev_html_input_text(cantidadCaracteres=false,conEspacios=true,evento=event) {
+    cantidadCaracteres = !(cantidadCaracteres) ? (cantidadCaracteres).length : cantidadCaracteres;
+    let limitar        = dev_html_limitar_input(cantidadCaracteres,evento);
+    let espacios       = (conEspacios) ? dev_html_no_permitir_espacios_input(evento) : true;
+
+    return limitar && espacios;
 }
 
 /*LLAMADA DE FUNCION MÁS BREVE*/
