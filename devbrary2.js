@@ -904,14 +904,14 @@ function dev_01_help(nombreDeFuncion=''){
 
 /*HTML*/
 
-function dev_html_permitir_caracteres_input( permitidos, elEvento = event,caracteresExtra='') {
+function dev_html_permitir_caracteres_input( permitidos,caracteresExtra='', elEvento = event) {
     //Se usa con onkeypress
     // onkeypress="return dev_html_permitir_caracteres_input('num')"
     // onkeypress="return dev_html_permitir_caracteres_input('car')"
     // onkeypress="return dev_html_permitir_caracteres_input('num_car')"
     // Variables que definen los caracteres permitidos
     let numeros            = "0123456789"+caracteresExtra;
-    let caracteres         = " abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ"+caracteresExtra;
+    let caracteres         = " abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóúÁÉÍÓÚ"+caracteresExtra;
     let numeros_caracteres = numeros + caracteres;
     let teclas_especiales  = [8, 37, 39, 46];
     // 8 = BackSpace, 46 = Supr, 37 = flecha izquierda, 39 = flecha derecha
