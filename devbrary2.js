@@ -124,6 +124,10 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
                 if(retornar) return 'null';
             }else if(dev_dom_existe_elemento($(dato).attr('id'))){
                 dev_test_var_dom_dump($(dato).attr('id'));
+            }else if($(dato).html()){
+                if(imprimir) echo('Objeto DOM');
+                if(imprimir) echo(dato);
+                if(retornar) return 'dom';
             }else if(dato !== undefined && dato !== null && dato.constructor == Object){
                 if(imprimir) echo('Objeto de tipo JSON');
                 if(imprimir) echo(dato);
@@ -327,7 +331,8 @@ function dev_str_incluye_reg(t,expresion) {
 
 function dev_str_corregir_expresion_regular(expresion){
     return (dev_str_inicia_con(expresion,'/') && dev_str_termina_con(expresion,'/')) ?
-        expresion.substring(1,expresion.lenght-1) :
+        expresion.substring(1,expresion.length-1) :
+        /*AGREGAR FALTA G*/
         expresion;
 }
 
@@ -357,6 +362,18 @@ function dev_str_to_upper(t) {
     return dev_is_string(t,1) ?
         t.toUpperCase() :
         false;
+}
+
+function dev_str_conseguir_expresion_regular(t,expresion) {
+    expresion = dev_str_corregir_expresion_regular(expresion)
+    if( dev_str_incluye_reg(t,expresion) ){
+        t = t.match(expresion)
+        if(t.length>1){
+            //FALTA FOR ARRAY
+        }
+        return t[0]
+    }
+    return false;
 }
 
 /*FORM*/
@@ -840,7 +857,7 @@ function dev_dom_agregar_html(textoHtml,idElementoPadre,alFinal=true) {
 }
 
 function dev_dom_agregar_jquery(version='1.3.1',etiquetaPadre='head',logCargado=false) {
-    etiquetaPadre = dev_dom_es_etiqueta_html(etiquetaPadre) ? etiquetaPadre : 'head';
+    //etiquetaPadre = dev_dom_es_etiqueta_html(etiquetaPadre) ? etiquetaPadre : 'head';
     // agregamos archivo-ltr.css o archivo-rtl.css
     let script = document.createElement( "script" );
     script.type = "text/javascript";
@@ -871,6 +888,21 @@ function dev_dom_convertir_html_a_jpg(idElemento,nombreArchivo='screenshot-'+dev
                 });
             }
         });
+}
+
+function dev_dom_agregar_js_a_iframe(id,script, scriptId='script-iframe') {
+    id = dev_dom_str_a_id(id)
+    var $iframes = $(id);
+    $iframes.each(function () {
+        var thisDoc = this.contentWindow.document;
+        if ( ! thisDoc.getElementById(scriptID)) {
+            var scriptObj = thisDoc.createElement("script");
+            scriptObj.type = "text/javascript";
+            scriptObj.id = scriptId;
+            scriptObj.innerHTML = script;
+            thisDoc.body.appendChild(scriptObj);
+        }
+    });
 }
 
 /*Array*/
@@ -1012,4 +1044,3 @@ function var_dom_dump (texto){
 function t_trim(t) {
     return dev_str_quitar_espacios_extra(t);
 }
-
