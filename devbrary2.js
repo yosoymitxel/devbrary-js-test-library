@@ -517,27 +517,23 @@ function dev_dom_agregar_css(url,titulo='') {
 }
 
 function dev_dom_existe_elemento (idObjeto){
-    if(dev_is_string(idObjeto)){
-        idObjeto = dev_str_quitar_espacios_blancos(idObjeto);
+    idObjeto = dev_str_quitar_espacios_extra(idObjeto)
+
+    if(dev_is_string(idObjeto,1)){
+
         if(dev_dom_es_etiqueta_html(idObjeto)){
             if(($(idObjeto).length>0)){
                 return true;
             }
 
-        }else if((!idObjeto.startsWith('#') && !idObjeto.startsWith('.')) || idObjeto.startsWith('#')){
-            let id = idObjeto.startsWith('#')?idObjeto:'#'+idObjeto;
-
-            if(!dev_str_esta_vacio($(id).attr('id'))){
-                return true;
-            }
-
-        }else if(idObjeto.startsWith('.')){
-            let id = idObjeto;
-
-            if(!dev_str_esta_vacio($(id).attr('class'))){
-                return true;
-            }
         }
+
+        idObjeto = dev_dom_str_a_id(idObjeto)
+
+        if(!dev_str_esta_vacio($(idObjeto).parent().html()) || $(idObjeto).parent().html()){
+            return true;
+        }
+
     }
     return false;
 }
@@ -664,11 +660,11 @@ function dev_dom_copiar_en_portapapeles_attr_elemento(id,attr='value') {
 }
 
 function dev_dom_str_a_id(id) {
-    id = dev_str_quitar_espacios_blancos(id);
+    id = dev_str_quitar_espacios_extra(id);
     if (dev_str_validar_longitud(id)){
         id = dev_dom_es_etiqueta_html(id) || dev_str_inicia_con(id,'#') || dev_str_inicia_con(id,'.') ?
-            dev_str_quitar_espacios_blancos((id) ):
-            dev_str_quitar_espacios_blancos(('#'+id));
+            dev_str_quitar_espacios_extra((id) ):
+            dev_str_quitar_espacios_extra(('#'+id));
         return id;
     }
     return '';
@@ -903,6 +899,29 @@ function dev_dom_agregar_js_a_iframe(id,script, scriptId='script-iframe') {
             thisDoc.body.appendChild(scriptObj);
         }
     });
+}
+
+function dev_dom_reemplazar_clase(idElemento,classBuscar,classReemplazar='') {
+    idElemento = dev_dom_str_a_id(idElemento)
+    if (dev_dom_existe_elemento(idElemento)){
+        $(idElemento).removeClass(classBuscar).addClass(classReemplazar)
+        return true
+    }
+    return false;
+}
+
+function dev_dom_toogle_class(idElemento,classBuscar,classReemplazar='') {
+    idElemento = dev_dom_str_a_id(idElemento)
+    if (dev_dom_existe_elemento(idElemento)){
+        $(idElemento).toggleClass(classBuscar)
+        $(idElemento).toggleClass(classReemplazar)
+        return true
+    }
+    return false;
+}
+
+function dev_dom_scroll_top(velocidadMS = 500){
+    $("html, body").animate({scrollTop: 0}, 500);
 }
 
 /*Array*/
