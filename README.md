@@ -51,17 +51,3 @@ Este proyecto está bajo la Licencia (MIT)
 
 ---
 ⌨️ con ❤️ por [yosoymitxel](https://github.com/yosoymitxel)
-
-
-
-O con la versión minificada:
-
-
-<script id="devbrary" src="https://cdn.jsdelivr.net/gh/yosoymitxel/devbrary-js-test-library@master/devbrary.min.js"></script> 
-
-
-También puedes agregarlo usando JQuery
-
-$.getScript( "https://cdn.jsdelivr.net/gh/yosoymitxel/devbrary-js-test-library@master/devbrary.js", function( data, textStatus, jqxhr ) {
-  console.log( "Fue cargado correctamente." );
-});
