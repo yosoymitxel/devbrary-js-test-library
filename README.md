@@ -7,7 +7,7 @@ Este se divide en distintas finalidades de funciones usando como prefijo `dev_`
 **Ejemplo:** `dev_test_var_dump('prueba')`
 
 * str  -> manejo de string
-`dev_str_reemplazar_expresion_regular('Hola', '\w+',' ')`
+```dev_str_reemplazar_expresion_regular('Hola', '\w+',' ')```
 * test -> manejo de testeo
 `dev_test_var_dom_dump('id-elemento')`
 * dom  -> manejo de DOM
