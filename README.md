@@ -4,7 +4,7 @@ Funciones varias para facilitar el uso JavaScript.
 
 Este se divide en distintas finalidades de funciones usando como prefijo dev_
 
-Ejemplo: dev_test_var_dump('prueba')
+*Ejemplo:* dev_test_var_dump('prueba')
 
 * str  -> manejo de string
 * fech -> manejo de fechas
@@ -19,15 +19,15 @@ Ejemplo: dev_test_var_dump('prueba')
 ## Instalación 
 #### Al descargarla usa esta etiqueta html para añadirla a tu proyecto
 
-<script id="dev-js-devbrary" src="/devbrary.js"></script> 
+`<script id="dev-js-devbrary" src="/devbrary.js"></script> `
 
 #### Puedes agregarlo a tu proyecto con la siguiente etiqueta html:
 
-<script id="dev-js-devbrary" src="https://cdn.jsdelivr.net/gh/yosoymitxel/devbrary-js-test-library@master/devbrary.js"></script> 
+`<script id="dev-js-devbrary" src="https://cdn.jsdelivr.net/gh/yosoymitxel/devbrary-js-test-library@master/devbrary.js"></script> `
 
 #### O con la versión minificada:
 
-<script id="dev-js-devbrary" src="https://cdn.jsdelivr.net/gh/yosoymitxel/devbrary-js-test-library@master/devbrary.min.js"></script> 
+`<script id="dev-js-devbrary" src="https://cdn.jsdelivr.net/gh/yosoymitxel/devbrary-js-test-library@master/devbrary.min.js"></script> `
 
 #### También puedes agregarlo usando JQuery
 
