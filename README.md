@@ -14,7 +14,7 @@ Ejemplo: dev_test_var_dump('prueba')
 
 ## Pre-requisitos
 
-* jQuery
+* [jQuery](https://jquery.com/)
 
 ## Instalación 
 #### Al descargarla usa esta etiqueta html para añadirla a tu proyecto
@@ -35,12 +35,13 @@ $.getScript( "https://cdn.jsdelivr.net/gh/yosoymitxel/devbrary-js-test-library@m
   console.log( "Fue cargado correctamente." );
 });
 
-## Ejecutando las pruebas ⚙️
+## Ejecutando las pruebas
 
 Puedes escribir echo('prueba') o dev_test_echo('prueba') para saber si esta fue instalada correctamente
 
 ## Construido con 
 
+* JavasScript - Lenguaje de programación
 * [jQuery](https://jquery.com/) - Manejador de DOM
 
 ## Licencia 
