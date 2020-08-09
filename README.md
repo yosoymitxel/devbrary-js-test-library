@@ -6,35 +6,35 @@ Este se divide en distintas finalidades de funciones usando como prefijo `dev_`
 
 **Ejemplo:** `dev_test_var_dump('prueba')`
 
-* str  -> manejo de string
+* **str:** manejo de string
 ```
 dev_str_reemplazar_expresion_regular('Hola', '\w+',' ')
 ```
-* test -> manejo de testeo
+* **test:** manejo de testeo
 ```
 dev_test_var_dom_dump('id-elemento')
 ```
-* dom  -> manejo de DOM
+* **dom:** manejo de DOM
 ```
 dev_dom_crear_elemento('p','Valor del contenido','id-padre','id-elemento','clases','name',['otros','atributos'],['valor','de atributos'])
 ```
-* is  -> saber que tipo de dato es
+* **is:** saber que tipo de dato es
 ```
 dev_is_array(['valor'])
 ```
-* from  -> validación de elementos del domde
+* **form:** validación de elementos del domde
 ```
 dev_form_email('mail@mail.com')
 ```
-* url -> manejo de url
+* **url:** manejo de url
 ```
 dev_url_get_host('http://www.pagina.prueba.com')
 ```
-* arr  -> manejo de array
+* **arr:** manejo de array
 ```
 dev_arr_incluye_texto(['prueba'],'prueba')
 ```
-* fech -> manejo de fechas
+* **fec:** manejo de fechas
 ```
 dev_fec_fecha_actual()
 ```
