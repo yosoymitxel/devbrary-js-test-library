@@ -28,7 +28,7 @@ dev_form_email('mail@mail.com')
 ```
 * url -> manejo de url
 ```
-dev_url_get_host('http://www.pagina.prueba.com')`
+dev_url_get_host('http://www.pagina.prueba.com')
 ```
 * arr  -> manejo de array
 ```
