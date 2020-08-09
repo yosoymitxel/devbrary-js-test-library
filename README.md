@@ -12,11 +12,11 @@ Ejemplo: dev_test_var_dump('prueba')
 * test -> manejo de testeo
 * dom  -> manejo de DOM
 
-### Pre-requisitos
+## Pre-requisitos
 
 * jQuery
 
-### Instalación 
+## Instalación 
 #### Al descargarla usa esta etiqueta html para añadirla a tu proyecto
 
 <script id="dev-js-devbrary" src="/devbrary.js"></script> 
