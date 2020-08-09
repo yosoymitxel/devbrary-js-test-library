@@ -66,7 +66,7 @@ $.getScript( "https://cdn.jsdelivr.net/gh/yosoymitxel/devbrary-js-test-library@m
 
 ## Ejecutando las pruebas
 
-Puedes escribir echo('prueba') o dev_test_echo('prueba') para saber si esta fue instalada correctamente
+Puedes escribir `echo('prueba')` o `dev_test_echo('prueba')` para saber si esta fue instalada correctamente
 
 ## Construido con 
 
