@@ -2,15 +2,26 @@
 
 Funciones varias para facilitar el uso JavaScript.
 
-Este se divide en distintas finalidades de funciones usando como prefijo dev_
+Este se divide en distintas finalidades de funciones usando como prefijo `dev_`
 
-*Ejemplo:* dev_test_var_dump('prueba')
+**Ejemplo:** `dev_test_var_dump('prueba')`
 
 * str  -> manejo de string
-* fech -> manejo de fechas
-* arr  -> manejo de array
+`dev_str_reemplazar_expresion_regular('Hola', '\w+',' ')`
 * test -> manejo de testeo
+`dev_test_var_dom_dump('id-elemento')`
 * dom  -> manejo de DOM
+`dev_dom_crear_elemento('p','Valor del contenido','id-padre','id-elemento','clases','name',['otros','atributos'],['valor','de atributos'])`
+* is  -> saber que tipo de dato es
+`dev_is_array(['valor'])`
+* from  -> validación de elementos del domde
+`dev_form_email('mail@mail.com')`
+* url -> manejo de url
+`dev_url_get_host('http://www.pagina.prueba.com')`
+* arr  -> manejo de array
+`dev_arr_incluye_texto(['prueba'],'prueba')`
+* fech -> manejo de fechas
+`dev_fec_fecha_actual()`
 
 ## Pre-requisitos
 
