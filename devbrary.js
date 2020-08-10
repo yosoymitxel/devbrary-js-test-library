@@ -124,7 +124,7 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
                 if(retornar) return 'null';
             }else if(dev_dom_existe_elemento($(dato).attr('id'))){
                 dev_test_var_dom_dump($(dato).attr('id'));
-            }else if($(dato).html()){
+            }else if(typeof $(dato).html === 'function' && $(dato).html()){
                 if(imprimir) echo('Objeto DOM');
                 if(imprimir) echo(dato);
                 if(retornar) return 'dom';
