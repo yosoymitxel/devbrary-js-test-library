@@ -449,7 +449,7 @@ function dev_str_sin_caracteres_especiales(texto,quitarTodos=true){
         texto = texto.replace(/(\s+|\-+|\_\_)+/g,"_");
 
         if(quitarTodos){
-            texto = dev_string_reemplazar_expresion_regular(texto,'\\W','');
+            texto = dev_str_reemplazar_expresion_regular (texto,'\\W','');
         }
 
     }
