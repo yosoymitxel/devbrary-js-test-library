@@ -514,10 +514,14 @@ function dev_url_get_host(url) {
 }
 
 function dev_url_pagina_existe(url) {
-    var request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    request.send();
-    return !(request.status === "404");
+    try {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, false);
+        xhr.send();
+        return (xhr.status == 200)
+    } catch(err) {
+        return(false);
+    }
 }
 
 function dev_url_string_a_url(url) {
