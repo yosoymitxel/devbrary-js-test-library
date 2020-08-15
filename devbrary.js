@@ -449,7 +449,7 @@ function dev_str_sin_caracteres_especiales(texto,quitarTodos=true){
         texto = texto.replace(/(\s+|\-+|\_\_)+/g,"_");
 
         if(quitarTodos){
-            texto = dev_str_reemplazar_expresion_regular (texto,'\\W','');
+            texto = dev_str_reemplazar_expresion_regular(texto,'\\W','');
         }
 
     }
@@ -514,14 +514,10 @@ function dev_url_get_host(url) {
 }
 
 function dev_url_pagina_existe(url) {
-    try {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', url, false);
-        xhr.send();
-        return (xhr.status == 200)
-    } catch(err) {
-        return(false);
-    }
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.send();
+    return !(request.status === "404");
 }
 
 function dev_url_string_a_url(url) {
