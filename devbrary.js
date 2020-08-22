@@ -417,7 +417,7 @@ function dev_str_acortar_texto(t,cantidadCaracteres) {
 function dev_str_substring(t,inicio, fin) {
     if(dev_is_string(t,1) && dev_is_numero(inicio) && dev_is_numero(fin)){
         if(fin<0){
-            return t.substring(inicio, (t.length - fin) )
+            return t.substring(inicio, (t.length + fin) )
         }
         return t.substring(inicio,fin)
     }
