@@ -124,14 +124,14 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
                 if(retornar) return 'null';
             }else if(dev_dom_existe_elemento($(dato).attr('id'))){
                 dev_test_var_dom_dump($(dato).attr('id'));
-            }else if(typeof $(dato).html === 'function' && $(dato).html()){
-                if(imprimir) echo('Objeto DOM');
-                if(imprimir) echo(dato);
-                if(retornar) return 'dom';
             }else if(dato !== undefined && dato !== null && dato.constructor == Object){
                 if(imprimir) echo('Objeto de tipo JSON');
                 if(imprimir) echo(dato);
                 if(retornar) return 'json';
+            }else if(typeof $(dato).html === 'function' && $(dato).html()){
+                if(imprimir) echo('Objeto DOM');
+                if(imprimir) echo(dato);
+                if(retornar) return 'dom';
             }else{
                 if(imprimir) echo('Objeto no reconocido.');
                 if(retornar) return 'Objeto no reconocido';
@@ -375,6 +375,9 @@ function dev_str_conseguir_expresion_regular(t,expresion) {
     }
     return false;
 }
+function dev_str_capitalizar(t) {
+    return t.toLowerCase().replace( /\b./g, function(a){ return a.toUpperCase(); } );
+}
 
 /*FORM*/
 
@@ -411,7 +414,7 @@ function dev_str_acortar_texto(t,cantidadCaracteres) {
     if(dev_is_string(t,1)){
         return (dev_is_string(t,cantidadCaracteres)) ? dev_str_substring(t,0,cantidadCaracteres)+'...' : t;
     }
-    return false;
+    return '';
 }
 
 function dev_str_substring(t,inicio, fin) {
@@ -532,11 +535,7 @@ function dev_url_string_a_url(url) {
 
 function dev_url_abrir_enlace(url,target='') {
     url = dev_str_quitar_espacios_blancos(url);
-    if(dev_url_pagina_existe(url)){
-        window.open(url, target);
-        return true;
-    }
-    return false;
+    return window.open(url, target);
 }
 
 /*DOM*/
@@ -922,10 +921,10 @@ function dev_dom_agregar_jquery(version='1.3.1',etiquetaPadre='head',logCargado=
 }
 
 function dev_dom_convertir_html_a_jpg(idElemento,nombreArchivo='screenshot-'+dev_str_sin_caracteres_especiales(dev_fec_fecha_actual()),mostrarLogCargado){
-    $.getScript( "http://www.linkea.ga/assets/js/htmltocanvas.js", function( data, textStatus, jqxhr ) {
+    $.getScript( "http://www.linkeapy.ga/assets/js/htmltocanvas.js", function( data, textStatus, jqxhr ) {
         console.log( "htmltocanvas: Fue cargado correctamente." );
     });
-    $.getScript( "http://www.linkea.ga/assets/js/filesaver.js", function( data, textStatus, jqxhr ) {
+    $.getScript( "http://www.linkeapy.ga/assets/js/filesaver.js", function( data, textStatus, jqxhr ) {
         console.log( "filesaver: Fue cargado correctamente." );
     });
 
@@ -1094,6 +1093,7 @@ function dev_html_no_permitir_espacios_input(evento=event) {
         return false;
     }
 }
+
 
 function dev_html_input_text(cantidadCaracteres=false,conEspacios=true,evento=event) {
     cantidadCaracteres = !(cantidadCaracteres) ? (cantidadCaracteres).length : cantidadCaracteres;
