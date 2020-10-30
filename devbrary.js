@@ -1,10 +1,26 @@
+/*
+Librería DevBrary
+Fecha de inicio: 15/05/2020
+
+Lista de categorías:
+
+TEST     = Debug y utilidades para
+DOM      = Manejo de DOM - HTML
+URL      = Manejo de Urls
+STR      = Manejo de string
+FEC      = Manejo de fechas
+ARR      = Manejo de Arrays
+IS       = Tipo de variable
+
+*/
+
 /*Test*/
 
-function dev_test_echo(texto,valor=false){
+function dev_test_echo(texto,valor=false,delimitador=':'){
     if(!valor){
         console.log(texto);
     }else{
-        console.log(texto+' : '+valor);
+        console.log(`${texto} ${delimitador} ${valor}`);
     }
 
 }
@@ -49,7 +65,7 @@ function dev_test_contador_texto_para_pruebas(texto='Prueba',reiniciar=false) {
         dev_test_contador_texto_para_pruebas.counter = 0;
     }
     dev_test_contador_texto_para_pruebas.counter++;
-    console.log(texto+': '+dev_test_contador_texto_para_pruebas.counter);
+    echo(texto+': '+dev_test_contador_texto_para_pruebas.counter);
 }
 
 function dev_test_contador_automatico(valor=false) {
@@ -180,18 +196,14 @@ function dev_test_tipo_dato(dato) {
     }
 }
 
-function dev_test_echo_titulo_valor(titulo,valor,delimitador=':') {
-    titulo      = dev_str_convertir_a_sting(titulo);
-    valor       = dev_str_convertir_a_sting(valor);
-    delimitador = dev_str_convertir_a_sting(delimitador);
-    delimitador = ' '+delimitador+' ';
-    echo(titulo+delimitador+valor);
-}
-
 function dev_test_depurar(condicion=false,obj=false) {
     if(condicion){
         dev_test_var_dump(obj);
     }
+}
+
+function dev_test_obj_to_bool(obj) {
+    return !!obj
 }
 
 /*STR*/
@@ -213,7 +225,7 @@ function dev_str_sin_caracteres_especiales(texto,quitarTodos=true){
 
         texto = (texto.toString()).toLowerCase();
         for(let i=0; i<vocalesNoPermitidas.length;i++){
-            texto = texto.replace(new RegExp(vocalesNoPermitidas[i], 'g'), vocalesPermitidas[i]);
+            texto = texto.replace(dev_str_reg_crear_expresion(vocalesNoPermitidas[i]), vocalesPermitidas[i]);
             //texto = texto.replace(vocalesNoPermitidas[i], vocalesPermitidas[i]);
         }
 
@@ -250,14 +262,14 @@ function dev_str_conseguir_numero_string (texto,returnArray=false){
         let numero =  texto.match(/\d+/g);
 
         //Se valida si es es un array, hay caso (como el segundo) donde no sale un número directamente sino un array
-        numero = Array.isArray(numero && !returnArray)?numero.join(''):numero;
+        numero = Array.isArray(numero)  && !returnArray ? numero.join('') : numero;
         return numero;
     }
 
     return false;
 }
 
-function dev_str_separador_unidad_mil(numero){
+function dev_str_separador_unidad_mil(numero,delimitador='.'){
     numero              = numero.toString();
     let filtered_number = numero.replace(/[^0-9]/gi, '');
     let length          = filtered_number.length;
@@ -267,9 +279,8 @@ function dev_str_separador_unidad_mil(numero){
     for(i = 1; i <= length; i++){
         if(breakpoint > 3){
             breakpoint = 1;
-            formated_number = '.' + formated_number;
+            formated_number = delimitador + formated_number;
         }
-        var next_letter = i + 1;
         formated_number = filtered_number.substring(length - i, length - (i - 1)) + formated_number;
 
         breakpoint++;
@@ -280,25 +291,17 @@ function dev_str_separador_unidad_mil(numero){
 
 function dev_str_esta_vacio(texto){
     texto = dev_str_convertir_a_sting(texto);
-    if(texto !=undefined && texto!='' && texto.length>0 && texto!=null && texto!==''){
-        return false;
-    }else{
-        return true;
-    }
+    return !dev_is_string(texto,1)
 }
 
 function dev_str_reemplazar_expresion_regular(t,expresion,reemplazo) {
-    expresion = dev_str_corregir_expresion_regular(expresion);
-    if(dev_is_string(t) && dev_str_incluye_reg(t,expresion)){
-        var re = new RegExp(expresion,'g');
+    expresion = dev_str_reg_corregir_expresion(expresion);
+    if(dev_is_string(t) && dev_str_reg_incluye(t,expresion)){
+        let re = dev_str_reg_crear_expresion(expresion);
         return t.replace(re,reemplazo);
-    }else{
-        return t;
     }
-}
 
-function dev_str_validar_longitud(t,longitud = 1) {
-    return (!dev_str_esta_vacio(t) && t.length>=longitud);
+    return t;
 }
 
 function dev_str_convertir_a_sting(t) {
@@ -323,17 +326,20 @@ function dev_str_incluye(t,busqueda) {
     return dev_is_string(t)?t.includes(busqueda):'';
 }
 
-function dev_str_incluye_reg(t,expresion) {
-    expresion = dev_str_corregir_expresion_regular(expresion);
-    let expreg = new RegExp(expresion);
+function dev_str_reg_incluye(t,expresion) {
+    let expreg = dev_str_reg_crear_expresion(expresion);
     return dev_is_string(t)?expreg.test(t):false;
 }
 
-function dev_str_corregir_expresion_regular(expresion){
+function dev_str_reg_corregir_expresion(expresion){
     return (dev_str_inicia_con(expresion,'/') && dev_str_termina_con(expresion,'/')) ?
         expresion.substring(1,expresion.length-1) :
         /*AGREGAR FALTA G*/
-        expresion;
+        expresion
+}
+
+function dev_str_reg_crear_expresion(expresion,flag='g') {
+    return new RegExp(expresion,flag)
 }
 
 function dev_str_primera_letra_mayuscula(texto){
@@ -341,7 +347,7 @@ function dev_str_primera_letra_mayuscula(texto){
 }
 
 function dev_str_contar_caracteres(t) {
-    return (dev_is_string(t))?t.length:0;
+    return (dev_is_string(t))? t.length : 0
 }
 
 function dev_str_inicia_con(t,busqueda) {
@@ -365,8 +371,8 @@ function dev_str_to_upper(t) {
 }
 
 function dev_str_conseguir_expresion_regular(t,expresion) {
-    expresion = dev_str_corregir_expresion_regular(expresion)
-    if( dev_str_incluye_reg(t,expresion) ){
+    expresion = dev_str_reg_corregir_expresion(expresion)
+    if( dev_str_reg_incluye(t,expresion) ){
         t = t.match(expresion)
         if(t.length>1){
             //FALTA FOR ARRAY
@@ -386,28 +392,30 @@ function dev_form_email(t) {
 }
 
 function dev_form_url(t,validarExistencia=false) {
-    let re = /^(file|http?:\/\/|https?:\/\/)\w+\.\w+/;
-    return (!validarExistencia) ? re.test(t) && dev_str_quitar_espacios_blancos(t) == t : re.test(t) && dev_url_pagina_existe(t) && dev_str_quitar_espacios_blancos(t) == t;
+    let re = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    return (!validarExistencia) ?
+        re.test(t) && dev_str_quitar_espacios_blancos(t) === t :
+        re.test(t) && dev_url_pagina_existe(t) && dev_str_quitar_espacios_blancos(t) === t
 }
 
 function dev_form_text_area(idObjeto,longitud=0) {
-    return dev_str_validar_longitud((dev_dom_value(idObjeto)),longitud) ? true : false;
+    return dev_is_string((dev_dom_obj_value(idObjeto)), longitud)
 }
 
 function dev_form_radio_box(idObjeto) {
-    return $(dev_dom_objeto(idObjeto)).is(":checked") ? true : false;
+    return dev_test_obj_to_bool($(dev_dom_objeto(idObjeto)).is(":checked"))
 }
 
 function dev_form_select(idSelect) {
-    return (dev_dom_value(idSelect)) ? true : false;
+    return dev_test_obj_to_bool(dev_dom_obj_value(idSelect))
 }
 
 function dev_form_input_string(idSelect,longitud=0) {
-    return dev_str_validar_longitud($(idSelect).val(),longitud) ? true : false;
+    return dev_is_string(dev_dom_obj_value(idSelect),longitud)
 }
 
 function dev_form_input_numero(idSelect) {
-    return dev_is_numero(dev_dom_value(idSelect)) ? true : false;
+    return dev_is_numero(dev_dom_obj_value(idSelect))
 }
 
 function dev_str_acortar_texto(t,cantidadCaracteres) {
@@ -440,7 +448,7 @@ function dev_str_sin_caracteres_especiales(texto,quitarTodos=true){
 
         texto = (texto.toString()).toLowerCase();
         for(let i=0; i<vocalesNoPermitidas.length;i++){
-            texto = texto.replace(new RegExp(vocalesNoPermitidas[i], 'g'), vocalesPermitidas[i]);
+            texto = texto.replace(dev_str_reg_crear_expresion(vocalesNoPermitidas[i]), vocalesPermitidas[i]);
             //texto = texto.replace(vocalesNoPermitidas[i], vocalesPermitidas[i]);
         }
 
@@ -538,6 +546,14 @@ function dev_url_abrir_enlace(url,target='') {
     return window.open(url, target);
 }
 
+function dev_url_this_host() {
+    return window.location.host
+}
+
+function dev_url_this_pagina_actual() {
+    return window.location.pathname
+}
+
 /*DOM*/
 
 function dev_dom_agregar_bootstrap(versionBootstrap='4.4.1',versionJquery='3.4.1',versionPopper='1.16.0') {
@@ -548,6 +564,7 @@ function dev_dom_agregar_bootstrap(versionBootstrap='4.4.1',versionJquery='3.4.1
 }
 
 function dev_dom_agregar_js(url,titulo='') {
+    url = dev_form_url(url) ? url : dev_url_this_host()+url
     if(dev_form_url(url) && dev_url_pagina_existe(url)){
         titulo = dev_is_string(titulo,1) ?
             titulo:
@@ -559,6 +576,7 @@ function dev_dom_agregar_js(url,titulo='') {
 }
 
 function dev_dom_agregar_css(url,titulo='') {
+    url = dev_form_url(url) ? url : dev_url_this_host()+url
     if(dev_form_url(url) && dev_url_pagina_existe(url)){
         titulo = dev_is_string(titulo,1) ?
             titulo:
@@ -573,12 +591,10 @@ function dev_dom_existe_elemento (idObjeto){
     idObjeto = dev_str_quitar_espacios_extra(idObjeto)
 
     if(dev_is_string(idObjeto,1)){
-
         if(dev_dom_es_etiqueta_html(idObjeto)){
             if(($(idObjeto).length>0)){
                 return true;
             }
-
         }
 
         idObjeto = dev_dom_str_a_id(idObjeto)
@@ -586,13 +602,91 @@ function dev_dom_existe_elemento (idObjeto){
         if(!dev_str_esta_vacio($(idObjeto).parent().html()) || $(idObjeto).parent().html()){
             return true;
         }
-
     }
     return false;
 }
 
-function dev_dom_value(idObjeto) {
-    return dev_dom_existe_elemento(t_trim(idObjeto))? $(dev_dom_objeto(idObjeto)).val() : false;
+function dev_dom_obj_attr(idObjeto,attr,valor=false) {
+    idObjeto         = dev_dom_str_a_id(idObjeto)
+    let asignarValor = dev_test_obj_to_bool(valor)
+
+    if (dev_dom_existe_elemento(id) && dev_is_string(attr,1)){
+        switch (attr) {
+            case "value":
+            case "val":
+                if(!asignarValor){
+                    return $(id).val()
+                }else{
+                    $(id).val(valor)
+                }
+                break;
+            case "id":
+                if(!asignarValor){
+                    return $(id).attr('id')
+                }else{
+                    $(id).attr('id',valor)
+                }
+                break;
+            case "name":
+                if(!asignarValor){
+                    return $(id).attr('name')
+                }else{
+                    $(id).attr('name',valor)
+                }
+                break;
+            case "class":
+                if(!asignarValor){
+                    return $(id).attr('class');
+                }else{
+                    $(id).attr('class',valor)
+                }
+                break;
+            case "html":
+                if(!asignarValor){
+                    return $(id).html()
+                }else{
+                    $(id).html(valor)
+                }
+                break;
+            case "text":
+                if(!asignarValor){
+                    return  $(id).text()
+                }else{
+                    $(id).text(valor)
+                }
+                break;
+            default:
+                if(!asignarValor){
+                    return $(id).attr(attr,valor)
+                }else{
+                    $(id).attr(attr,valor)
+                }
+        }
+    }
+}
+
+function dev_dom_obj_value(idObjeto,valor=null) {
+    return dev_dom_obj_attr(t_trim(idObjeto)) ?
+        dev_dom_obj_attr(idObjeto,'value',valor) :
+        false
+}
+
+function dev_dom_obj_class(idObjeto,valor='') {
+    return dev_dom_existe_elemento(t_trim(idObjeto)) ?
+        dev_dom_obj_attr(idObjeto,'class',valor) :
+        false
+}
+
+function dev_dom_obj_html(idObjeto,valor='') {
+    return dev_dom_existe_elemento(t_trim(idObjeto)) ?
+        dev_dom_obj_attr(idObjeto,'html',valor) :
+        false
+}
+
+function dev_dom_obj_text(idObjeto,valor='') {
+    return dev_dom_existe_elemento(t_trim(idObjeto)) ?
+        dev_dom_obj_attr(idObjeto,'text',valor) :
+        false
 }
 
 function dev_dom_objeto(idObjeto,buscarTodo=false) {
@@ -642,8 +736,8 @@ function dev_dom_generar_string_atributos(arrayAtributosTitulo,arrayAtributosVal
     return false
 }
 
-function dev_buscar_dentro_de_elemento(idElementoPadre,busqueda) {
-    if (dev_str_validar_longitud(idElementoPadre,1) && dev_str_validar_longitud(busqueda,1)){
+function dev_dom_obj_find(idElementoPadre,busqueda) {
+    if (dev_is_string(idElementoPadre,1) && dev_is_string(busqueda,1)){
         idElementoPadre = dev_dom_str_a_id(idElementoPadre);
         if(dev_dom_existe_elemento(idElementoPadre)){
             busqueda = dev_dom_str_a_id(busqueda);
@@ -663,12 +757,12 @@ function dev_dom_es_etiqueta_html(t) {
         'pre','progress','q','rp','rt','ruby','s','samp','script','section','select','small','source','span',
         'strong','style','sub','summary','details','sup','table','tbody','td','textarea','tfoot','th','thead',
         'time','title','tr','track','ul','var','video','wbr'];
-    return (dev_str_validar_longitud(t,1) && dev_arr_incluye_texto(array,t));
+    return (dev_is_string(t,1) && dev_arr_incluye_texto(array,t));
 }
 
 function dev_dom_texto_existe_en_pagina(t) {
-    return (dev_is_string(t,1) && dev_str_incluye( ($('body').html()) ,t)) ?
-        dev_str_incluye( ($('body').html()) ,t) :
+    return (dev_is_string(t,1) && dev_str_incluye( dev_dom_obj_html('body') ,t)) ?
+        dev_str_incluye( dev_dom_obj_html('body') ,t) :
         false;
 }
 
@@ -714,33 +808,13 @@ function dev_dom_copiar_en_portapapeles_attr_elemento(id,attr='value') {
 
 function dev_dom_str_a_id(id) {
     id = dev_str_quitar_espacios_extra(id);
-    if (dev_str_validar_longitud(id)){
+    if (dev_is_string(id)){
         id = dev_dom_es_etiqueta_html(id) || dev_str_inicia_con(id,'#') || dev_str_inicia_con(id,'.') ?
             dev_str_quitar_espacios_extra((id) ):
             dev_str_quitar_espacios_extra(('#'+id));
         return id;
     }
     return '';
-}
-
-function dev_dom_css_reemplazar(idElemento, atributos) {
-    idElemento = dev_dom_str_a_id(idElemento);
-    if(dev_dom_existe_elemento(idElemento)){
-        $(idElemento).css('');
-        $(idElemento).css(atributoActual + atributos);
-        return true;
-    }
-    return false;
-}
-
-function dev_dom_css_agregar(idElemento, atributos) {
-    idElemento = dev_dom_str_a_id(idElemento);
-    if(dev_dom_existe_elemento(idElemento)){
-        let atributoActual = dev_dom_get_valor_atributo(idElemento);
-        $(idElemento).css(atributoActual + atributos);
-        return true;
-    }
-    return false;
 }
 
 function dev_dom_str_a_unidad_de_medida(t) {
@@ -787,30 +861,12 @@ function dev_dom_cambiar_width_heigth(idElemento, width=null, height = null, min
 }
 
 
-function dev_dom_style_agregar(idElemento,atributos) {
+function dev_dom_style_agregar(idElemento,atributos,reemplazar=false) {
     idElemento = dev_dom_str_a_id(idElemento);
     if(dev_dom_existe_elemento(idElemento)){
-        let estilos = $(idElemento).attr('style') ? $(idElemento).attr('style') : '';
-        $(idElemento).attr('style',estilos+atributos);
+        let estilos = !reemplazar ? dev_dom_obj_attr(idElemento,'style') : ''
+        dev_dom_obj_attr(idElemento,'style',estilos+atributos)
         return true;
-    }
-    return false;
-}
-
-function dev_dom_style_reemplazar(idElemento,atributos) {
-    idElemento = dev_dom_str_a_id(idElemento);
-    if(dev_dom_existe_elemento(idElemento)){
-        $(idElemento).attr('style','');
-        $(idElemento).attr('style',atributos);
-        return true;
-    }
-    return false;
-}
-
-function dev_dom_get_valor_atributo(idElemento, atributo='val') {
-    idElemento = dev_dom_str_a_id(idElemento);
-    if(dev_dom_existe_elemento(idElemento)){
-        return $(idElemento).attr(atributo);
     }
     return false;
 }
@@ -841,7 +897,7 @@ function dev_dom_generar_array_titulo_valor(arrayAtributosTitulo,arrayAtributosV
         let j                = 0;
 
         for (let i=0; i<arrayAtributosTitulo.length; i++){
-            if(dev_is_string(dev_str_convertir_a_sting(arrayAtributosTitulo [i]),1) &&
+            if(dev_is_string(dev_str_convertir_a_sting(arrayAtributosTitulo  [i]),1) &&
                 dev_is_string(dev_str_convertir_a_sting(arrayAtributosValores[i]),1) ){
                 arrayTitulo .push(arrayAtributosTitulo [i]);
                 arrayValores.push(arrayAtributosValores[i]);
@@ -894,7 +950,7 @@ function dev_dom_generar_texto_de_html(etiqueta,contenido='',id='',clases='',arr
 
 function dev_dom_agregar_html(textoHtml,idElementoPadre,alFinal=true) {
     idElementoPadre = dev_dom_str_a_id(idElementoPadre);
-    if (dev_dom_existe_elemento(idElementoPadre) && dev_str_incluye_reg(textoHtml,/(<)(.|\n)+(>)$/)){
+    if (dev_dom_existe_elemento(idElementoPadre) && dev_str_reg_incluye(textoHtml,/(<)(.|\n)+(>)$/)){
         if (alFinal){
             $(idElementoPadre).append(textoHtml);
         }else {
@@ -920,13 +976,20 @@ function dev_dom_agregar_jquery(version='1.3.1',etiquetaPadre='head',logCargado=
     document.getElementsByTagName(etiquetaPadre)[0].appendChild(script);
 }
 
+function dev_dom_get_js(url) {
+    if(dev_form_url(url)){
+        $.getScript( url, function( data, textStatus, jqxhr ) {
+            echo( "Script cargado")
+        }).fail(function(error) {
+            echo( "Script error" ,error)
+        })
+    }
+
+}
+
 function dev_dom_convertir_html_a_jpg(idElemento,nombreArchivo='screenshot-'+dev_str_sin_caracteres_especiales(dev_fec_fecha_actual()),mostrarLogCargado){
-    $.getScript( "http://www.linkeapy.ga/assets/js/htmltocanvas.js", function( data, textStatus, jqxhr ) {
-        console.log( "htmltocanvas: Fue cargado correctamente." );
-    });
-    $.getScript( "http://www.linkeapy.ga/assets/js/filesaver.js", function( data, textStatus, jqxhr ) {
-        console.log( "filesaver: Fue cargado correctamente." );
-    });
+    dev_dom_get_js( "https://www.linkeapy.ga/assets/js/htmltocanvas.js")
+    dev_dom_get_js( "https://www.linkeapy.ga/assets/js/filesaver.js")
 
     idElemento = dev_dom_str_a_id(idElemento);
     html2canvas($(idElemento), {
@@ -954,7 +1017,7 @@ function dev_dom_agregar_js_a_iframe(id,script, scriptId='script-iframe') {
     });
 }
 
-function dev_dom_reemplazar_clase(idElemento,classBuscar,classReemplazar='') {
+function dev_dom_class_replace(idElemento,classBuscar,classReemplazar='') {
     idElemento = dev_dom_str_a_id(idElemento)
     if (dev_dom_existe_elemento(idElemento)){
         $(idElemento).removeClass(classBuscar).addClass(classReemplazar)
@@ -963,7 +1026,7 @@ function dev_dom_reemplazar_clase(idElemento,classBuscar,classReemplazar='') {
     return false;
 }
 
-function dev_dom_toogle_class(idElemento,classBuscar,classReemplazar='') {
+function dev_dom_class_toogle(idElemento,classBuscar,classReemplazar='') {
     idElemento = dev_dom_str_a_id(idElemento)
     if (dev_dom_existe_elemento(idElemento)){
         $(idElemento).toggleClass(classBuscar)
