@@ -291,7 +291,7 @@ function dev_str_separador_unidad_mil(numero,delimitador='.'){
 
 function dev_str_esta_vacio(texto){
     texto = dev_str_convertir_a_sting(texto);
-    return !dev_is_string(texto,1)
+    return !(texto !== undefined && texto!== null && texto.length > 0 && texto !== '')
 }
 
 function dev_str_reemplazar_expresion_regular(t,expresion,reemplazo) {
