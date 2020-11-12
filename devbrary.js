@@ -245,14 +245,13 @@ function dev_str_sin_caracteres_especiales(texto,quitarTodos=true){
 }
 
 function dev_str_quitar_espacios_extra(texto){
-    if(texto!='' && texto != null){
+    if(dev_is_string(texto,1)){
         texto = texto.trim();
         texto = texto.replace(/\s\s+/g, ' ');
         texto = texto.replace(/\s\s/g, '');
-    }else{
-        texto = '';
+        return texto
     }
-    return texto;
+    return '';
 }
 
 function dev_str_conseguir_numero_string (texto,returnArray=false){
@@ -588,21 +587,26 @@ function dev_dom_agregar_css(url,titulo='') {
 }
 
 function dev_dom_existe_elemento (idObjeto){
-    idObjeto = dev_str_quitar_espacios_extra(idObjeto)
+    if(!dev_test_es_tipo_de_dato(idObjeto,'dom')){
+        idObjeto = dev_str_quitar_espacios_extra(idObjeto)
 
-    if(dev_is_string(idObjeto,1)){
-        if(dev_dom_es_etiqueta_html(idObjeto)){
-            if(($(idObjeto).length>0)){
-                return true;
+        if(dev_is_string(idObjeto,1)){
+            if(dev_dom_es_etiqueta_html(idObjeto)){
+                if(($(idObjeto).length>0)){
+                    return true;
+                }
+            }
+
+            idObjeto = dev_dom_str_a_id(idObjeto)
+
+            if(!dev_str_esta_vacio($(idObjeto).parent().html()) || $(idObjeto).parent().html()){
+                return true
             }
         }
-
-        idObjeto = dev_dom_str_a_id(idObjeto)
-
-        if(!dev_str_esta_vacio($(idObjeto).parent().html()) || $(idObjeto).parent().html()){
-            return true;
-        }
+    }else{
+        return true
     }
+
     return false;
 }
 
@@ -807,11 +811,15 @@ function dev_dom_copiar_en_portapapeles_attr_elemento(id,attr='value') {
 }
 
 function dev_dom_str_a_id(id) {
-    id = dev_str_quitar_espacios_extra(id);
-    if (dev_is_string(id)){
-        id = dev_dom_es_etiqueta_html(id) || dev_str_inicia_con(id,'#') || dev_str_inicia_con(id,'.') ?
-            dev_str_quitar_espacios_extra((id) ):
-            dev_str_quitar_espacios_extra(('#'+id));
+    if(!dev_test_es_tipo_de_dato(id,'dom')){
+        id = dev_str_quitar_espacios_extra(id);
+        if (dev_is_string(id)){
+            id = dev_dom_es_etiqueta_html(id) || dev_str_inicia_con(id,'#') || dev_str_inicia_con(id,'.') ?
+                dev_str_quitar_espacios_extra((id) ):
+                dev_str_quitar_espacios_extra(('#'+id));
+            return id;
+        }
+    }else{
         return id;
     }
     return '';
