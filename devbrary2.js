@@ -288,17 +288,13 @@ function dev_str_esta_vacio(texto){
 }
 
 function dev_str_reemplazar_expresion_regular(t,expresion,reemplazo) {
-    expresion = dev_str_corregir_expresion_regular(expresion);
-    if(dev_is_string(t) && dev_str_incluye_reg(t,expresion)){
+    expresion = dev_str_reg_corregir_expresion(expresion);
+    if(dev_is_string(t) && dev_str_reg_incluye(t,expresion)){
         var re = new RegExp(expresion,'g');
         return t.replace(re,reemplazo);
     }else{
         return t;
     }
-}
-
-function dev_str_validar_longitud(t,longitud = 1) {
-    return (!dev_str_esta_vacio(t) && t.length>=longitud);
 }
 
 function dev_str_convertir_a_sting(t) {
@@ -323,13 +319,13 @@ function dev_str_incluye(t,busqueda) {
     return dev_is_string(t)?t.includes(busqueda):'';
 }
 
-function dev_str_incluye_reg(t,expresion) {
-    expresion = dev_str_corregir_expresion_regular(expresion);
+function dev_str_reg_incluye(t,expresion) {
+    expresion = dev_str_reg_corregir_expresion(expresion);
     let expreg = new RegExp(expresion);
     return dev_is_string(t)?expreg.test(t):false;
 }
 
-function dev_str_corregir_expresion_regular(expresion){
+function dev_str_reg_corregir_expresion(expresion){
     return (dev_str_inicia_con(expresion,'/') && dev_str_termina_con(expresion,'/')) ?
         expresion.substring(1,expresion.length-1) :
         /*AGREGAR FALTA G*/
@@ -365,8 +361,8 @@ function dev_str_to_upper(t) {
 }
 
 function dev_str_conseguir_expresion_regular(t,expresion) {
-    expresion = dev_str_corregir_expresion_regular(expresion)
-    if( dev_str_incluye_reg(t,expresion) ){
+    expresion = dev_str_reg_corregir_expresion(expresion)
+    if( dev_str_reg_incluye(t,expresion) ){
         t = t.match(expresion)
         if(t.length>1){
             //FALTA FOR ARRAY
@@ -388,7 +384,7 @@ function dev_form_url(t,validarExistencia=false) {
 }
 
 function dev_form_text_area(idObjeto,longitud=0) {
-    return dev_str_validar_longitud((dev_dom_value(idObjeto)),longitud) ? true : false;
+    return dev_is_string((dev_dom_obj_value(idObjeto)),longitud) ? true : false;
 }
 
 function dev_form_radio_box(idObjeto) {
@@ -396,15 +392,15 @@ function dev_form_radio_box(idObjeto) {
 }
 
 function dev_form_select(idSelect) {
-    return (dev_dom_value(idSelect)) ? true : false;
+    return (dev_dom_obj_value(idSelect)) ? true : false;
 }
 
 function dev_form_input_string(idSelect,longitud=0) {
-    return dev_str_validar_longitud($(idSelect).val(),longitud) ? true : false;
+    return dev_is_string($(idSelect).val(),longitud) ? true : false;
 }
 
 function dev_form_input_numero(idSelect) {
-    return dev_is_numero(dev_dom_value(idSelect)) ? true : false;
+    return dev_is_numero(dev_dom_obj_value(idSelect)) ? true : false;
 }
 
 function dev_str_acortar_texto(t,cantidadCaracteres) {
@@ -555,7 +551,7 @@ function dev_dom_existe_elemento (idObjeto){
     return false;
 }
 
-function dev_dom_value(idObjeto) {
+function dev_dom_obj_value(idObjeto) {
     return dev_dom_existe_elemento(t_trim(idObjeto))? $(dev_dom_objeto(idObjeto)).val() : false;
 }
 
@@ -606,8 +602,8 @@ function dev_dom_generar_string_atributos(arrayAtributosTitulo,arrayAtributosVal
     return false
 }
 
-function dev_buscar_dentro_de_elemento(idElementoPadre,busqueda) {
-    if (dev_str_validar_longitud(idElementoPadre,1) && dev_str_validar_longitud(busqueda,1)){
+function dev_dom_find(idElementoPadre,busqueda) {
+    if (dev_is_string(idElementoPadre,1) && dev_is_string(busqueda,1)){
         idElementoPadre = dev_dom_str_a_id(idElementoPadre);
         if(dev_dom_existe_elemento(idElementoPadre)){
             busqueda = dev_dom_str_a_id(busqueda);
@@ -627,7 +623,7 @@ function dev_dom_es_etiqueta_html(t) {
         'pre','progress','q','rp','rt','ruby','s','samp','script','section','select','small','source','span',
         'strong','style','sub','summary','details','sup','table','tbody','td','textarea','tfoot','th','thead',
         'time','title','tr','track','ul','var','video','wbr'];
-    return (dev_str_validar_longitud(t,1) && dev_arr_incluye_texto(array,t));
+    return (dev_is_string(t,1) && dev_arr_incluye_texto(array,t));
 }
 
 function dev_dom_texto_existe_en_pagina(t) {
@@ -678,7 +674,7 @@ function dev_dom_copiar_en_portapapeles_attr_elemento(id,attr='value') {
 
 function dev_dom_str_a_id(id) {
     id = dev_str_quitar_espacios_extra(id);
-    if (dev_str_validar_longitud(id)){
+    if (dev_is_string(id)){
         id = dev_dom_es_etiqueta_html(id) || dev_str_inicia_con(id,'#') || dev_str_inicia_con(id,'.') ?
             dev_str_quitar_espacios_extra((id) ):
             dev_str_quitar_espacios_extra(('#'+id));
@@ -700,7 +696,7 @@ function dev_dom_css_reemplazar(idElemento, atributos) {
 function dev_dom_css_agregar(idElemento, atributos) {
     idElemento = dev_dom_str_a_id(idElemento);
     if(dev_dom_existe_elemento(idElemento)){
-        let atributoActual = dev_dom_get_valor_atributo(idElemento);
+        let atributoActual = dev_dom_obj_attr(idElemento);
         $(idElemento).css(atributoActual + atributos);
         return true;
     }
@@ -771,7 +767,7 @@ function dev_dom_style_reemplazar(idElemento,atributos) {
     return false;
 }
 
-function dev_dom_get_valor_atributo(idElemento, atributo='val') {
+function dev_dom_obj_attr(idElemento, atributo='val') {
     idElemento = dev_dom_str_a_id(idElemento);
     if(dev_dom_existe_elemento(idElemento)){
         return $(idElemento).attr(atributo);
@@ -858,7 +854,7 @@ function dev_dom_generar_texto_de_html(etiqueta,contenido='',id='',clases='',arr
 
 function dev_dom_agregar_html(textoHtml,idElementoPadre,alFinal=true) {
     idElementoPadre = dev_dom_str_a_id(idElementoPadre);
-    if (dev_dom_existe_elemento(idElementoPadre) && dev_str_incluye_reg(textoHtml,/(<)(.|\n)+(>)$/)){
+    if (dev_dom_existe_elemento(idElementoPadre) && dev_str_reg_incluye(textoHtml,/(<)(.|\n)+(>)$/)){
         if (alFinal){
             $(idElementoPadre).append(textoHtml);
         }else {

@@ -611,7 +611,7 @@ function dev_dom_existe_elemento (idObjeto){
 }
 
 function dev_dom_obj_attr(idObjeto,attr,valor=false) {
-    idObjeto         = dev_dom_str_a_id(idObjeto)
+    let id         = dev_dom_str_a_id(idObjeto)
     let asignarValor = dev_test_obj_to_bool(valor)
 
     if (dev_dom_existe_elemento(id) && dev_is_string(attr,1)){
