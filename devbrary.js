@@ -8,9 +8,9 @@ TEST     = Debug y utilidades para
 DOM      = Manejo de DOM - HTML
 URL      = Manejo de Urls
 STR      = Manejo de string
+IS       = Tipo de variable
 FEC      = Manejo de fechas
 ARR      = Manejo de Arrays
-IS       = Tipo de variable
 
 */
 
@@ -464,6 +464,19 @@ function dev_str_sin_caracteres_especiales(texto,quitarTodos=true){
 
     }
     return texto;
+}
+
+function dev_str_trim(t,left=false,right=false) {
+    if (dev_is_string(t)){
+        if((!left && !right) || (left && right)){
+            t = t.trim()
+        }else{
+            t = left ? t.trimLeft() : t.trimRight()
+        }
+
+    }
+
+    return t
 }
 
 
