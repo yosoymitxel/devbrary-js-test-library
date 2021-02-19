@@ -213,6 +213,7 @@ function dev_test_print_array(array,nivelTabulado=0,detalles=false,retornar=fals
     let valorImprimir = ''
     let tabulado      = '\t'.repeat(nivelTabulado)
     let detalle       = detalles   ? `${tabulado}\tarray (${array.length})\n` : ''
+
     for (let valor of array){
         if (dev_is_array(valor)){
             valorImprimir += `${tabulado}${i} :\n${detalle}${dev_test_print_array(valor,nivelTabulado+1,detalles,retornar,tipoDeDato)}`
@@ -220,8 +221,10 @@ function dev_test_print_array(array,nivelTabulado=0,detalles=false,retornar=fals
             let tipoDato   = tipoDeDato ? dev_test_tipo_dato(valor)+' ' : ''
             valorImprimir += `${tabulado}${i} : ${tipoDato}${valor}\n`
         }
+
         i++
     }
+
     if (nivelTabulado!=0 || retornar){
         return valorImprimir
     }else{
@@ -407,38 +410,6 @@ function dev_str_capitalizar(t) {
     return t.toLowerCase().replace( /\b./g, function(a){ return a.toUpperCase(); } );
 }
 
-/*FORM*/
-
-function dev_form_email(t) {
-    return ( (/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+/.test(t)) && dev_str_quitar_espacios_blancos(t) == t);
-}
-
-function dev_form_url(t,validarExistencia=false) {
-    let re = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    return (!validarExistencia) ?
-        re.test(t) && dev_str_quitar_espacios_blancos(t) === t :
-        re.test(t) && dev_url_pagina_existe(t) && dev_str_quitar_espacios_blancos(t) === t
-}
-
-function dev_form_text_area(idObjeto,longitud=0) {
-    return dev_is_string((dev_dom_obj_value(idObjeto)), longitud)
-}
-
-function dev_form_radio_box(idObjeto) {
-    return dev_test_obj_to_bool($(dev_dom_objeto(idObjeto)).is(":checked"))
-}
-
-function dev_form_select(idSelect) {
-    return dev_test_obj_to_bool(dev_dom_obj_value(idSelect))
-}
-
-function dev_form_input_string(idSelect,longitud=0) {
-    return dev_is_string(dev_dom_obj_value(idSelect),longitud)
-}
-
-function dev_form_input_numero(idSelect) {
-    return dev_is_numero(dev_dom_obj_value(idSelect))
-}
 
 function dev_str_acortar_texto(t,cantidadCaracteres) {
     if(dev_is_string(t,1)){
@@ -502,6 +473,61 @@ function dev_str_trim(t,left=false,right=false) {
     return t
 }
 
+function dev_str_replace(t,busqueda,reemplazo) {
+    if(dev_is_string(t) && (dev_is_string(busqueda) || dev_is_array(busqueda) ) && (dev_is_string(reemplazo) || dev_is_array(reemplazo)) ){
+        if(dev_is_array(busqueda)) {
+            for (let i = 0, iMax = dev_arr_count(busqueda); i < iMax; i++){
+                let valor = dev_is_array(reemplazo) ? reemplazo[i] : reemplazo
+                t = t.replaceAll(dev_str_convertir_a_sting(busqueda[i]),dev_str_convertir_a_sting(valor))
+            }
+
+        }else{
+            t = t.replaceAll(busqueda,dev_str_convertir_a_sting(reemplazo))
+        }
+
+        return t
+    }
+
+    return false
+}
+
+function dev_str_reemplazar(t,busqueda,reemplazo) {
+    return dev_str_replace(t,busqueda,reemplazo)
+}
+
+/*FORM*/
+
+function dev_form_email(t) {
+    return ( (/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+/.test(t)) && dev_str_quitar_espacios_blancos(t) == t);
+}
+
+function dev_form_url(t,validarExistencia=false) {
+    let re = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    return (!validarExistencia) ?
+        re.test(t) && dev_str_quitar_espacios_blancos(t) === t :
+        re.test(t) && dev_url_pagina_existe(t) && dev_str_quitar_espacios_blancos(t) === t
+}
+
+function dev_form_text_area(idObjeto,longitud=0) {
+    return dev_is_string((dev_dom_obj_value(idObjeto)), longitud)
+}
+
+function dev_form_radio_box(idObjeto) {
+    return dev_test_obj_to_bool($(dev_dom_objeto(idObjeto)).is(":checked"))
+}
+
+function dev_form_select(idSelect) {
+    return dev_test_obj_to_bool(dev_dom_obj_value(idSelect))
+}
+
+function dev_form_input_string(idSelect,longitud=0) {
+    return dev_is_string(dev_dom_obj_value(idSelect),longitud)
+}
+
+function dev_form_input_numero(idSelect) {
+    return dev_is_numero(dev_dom_obj_value(idSelect))
+}
+
 
 /*IS*/
 
@@ -524,6 +550,7 @@ function dev_is_undefined(obj) {
 function dev_is_array(obj,tamanio=0) {
     return (dev_test_tipo_dato(obj)==='array' && obj.length>=tamanio);
 }
+
 
 /*FECHA*/
 
@@ -1109,6 +1136,10 @@ function dev_arr_incluye_texto(array,t,logitudTexto=1) {
 
 function dev_arr_print_array(array,detalles=false,retornar=false,tipoDeDato=false) {
     dev_test_print_array(array,null,detalles,retornar,tipoDeDato)
+}
+
+function dev_arr_count(array) {
+    return dev_is_array(array) ? array.length : false
 }
 
 /*HELP*/
