@@ -478,11 +478,11 @@ function dev_str_replace(t,busqueda,reemplazo) {
         if(dev_is_array(busqueda)) {
             for (let i = 0, iMax = dev_arr_count(busqueda); i < iMax; i++){
                 let valor = dev_is_array(reemplazo) ? reemplazo[i] : reemplazo
-                t = t.replaceAll(dev_str_convertir_a_sting(busqueda[i]),dev_str_convertir_a_sting(valor))
+                t = t.replaceAll(busqueda[i],valor)
             }
 
         }else{
-            t = t.replaceAll(busqueda,dev_str_convertir_a_sting(reemplazo))
+            t = t.replaceAll(busqueda,reemplazo)
         }
 
         return t
