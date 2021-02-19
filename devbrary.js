@@ -133,7 +133,9 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
         case 'object':
             if (Array.isArray(valorDato)) {
                 tipoDato = 'array';
-                if(imprimir) echo(`${tipoDato} (${valorDato.length}) "${valorDato}"`);
+                if(imprimir){
+                    echo(`${tipoDato} (${valorDato.length})\n${dev_test_print_array(valorDato,null,true,true,true)}`)
+                }
                 if(retornar) return 'array';
             }else if(valorDato == null){
                 if(imprimir) echo('NULL');
@@ -204,6 +206,27 @@ function dev_test_depurar(condicion=false,obj=false) {
 
 function dev_test_obj_to_bool(obj) {
     return !!obj
+}
+
+function dev_test_print_array(array,nivelTabulado=0,detalles=false,retornar=false,tipoDeDato=false) {
+    let i             = 0
+    let valorImprimir = ''
+    let tabulado      = '\t'.repeat(nivelTabulado)
+    let detalle       = detalles   ? `${tabulado}\tarray (${array.length})\n` : ''
+    for (let valor of array){
+        if (dev_is_array(valor)){
+            valorImprimir += `${tabulado}${i} :\n${detalle}${dev_test_print_array(valor,nivelTabulado+1,detalles,retornar,tipoDeDato)}`
+        }else{
+            let tipoDato   = tipoDeDato ? dev_test_tipo_dato(valor)+' ' : ''
+            valorImprimir += `${tabulado}${i} : ${tipoDato}${valor}\n`
+        }
+        i++
+    }
+    if (nivelTabulado!=0 || retornar){
+        return valorImprimir
+    }else{
+        echo(valorImprimir)
+    }
 }
 
 /*STR*/
@@ -1084,6 +1107,10 @@ function dev_arr_incluye_texto(array,t,logitudTexto=1) {
     return false;
 }
 
+function dev_arr_print_array(array,detalles=false,retornar=false,tipoDeDato=false) {
+    dev_test_print_array(array,null,detalles,retornar,tipoDeDato)
+}
+
 /*HELP*/
 
 function dev_01_help(nombreDeFuncion=''){
@@ -1192,8 +1219,8 @@ function dev_html_input_text(cantidadCaracteres=false,conEspacios=true,evento=ev
 function echo (texto,valor=false){
     dev_test_echo(texto,valor);
 }
-function var_dump (texto){
-    dev_test_var_dump(texto);
+function var_dump (texto,imprimir=true,retornar=false){
+    dev_test_var_dump(texto,imprimir,retornar);
 }
 function var_dom_dump (texto){
     dev_test_var_dom_dump(texto);
