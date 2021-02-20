@@ -130,6 +130,14 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
             if(imprimir) echo(tipoDato + '(' + valorDato.length + ') "' + valorDato + '"');
             if(retornar) return 'string';
             break;
+        case 'boolean':
+            if(imprimir) echo(tipoDato + ' "' + valorDato + '"');
+            if(retornar) return 'boolean';
+            break;
+        case 'undefined':
+            if(imprimir) echo('La variable no está definida. (undefined)');
+            if(retornar) return 'undefined';
+            break;
         case 'object':
             if (Array.isArray(valorDato)) {
                 tipoDato = 'array';
@@ -146,23 +154,19 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
                 if(imprimir) echo('Objeto de tipo JSON');
                 if(imprimir) echo(dato);
                 if(retornar) return 'json';
+            }else if(dev_test_objeto_incluye_propiedad(dato,['source','lastIndex','exec','test'])){
+                if(imprimir) echo('Expresión regular RegExp');
+                if(retornar) return 'regexp';
             }else if(typeof $(dato).html === 'function' && $(dato).html()){
                 if(imprimir) echo('Objeto DOM');
                 if(imprimir) echo(dato);
                 if(retornar) return 'dom';
             }else{
-                if(imprimir) echo('Objeto no reconocido.');
+                if(imprimir) echo('Objeto no reconocido');
                 if(retornar) return 'Objeto no reconocido';
             }
             break;
-        case 'boolean':
-            if(imprimir) echo(tipoDato + ' "' + valorDato + '"');
-            if(retornar) return 'boolean';
-            break;
-        case 'undefined':
-            if(imprimir) echo('La variable no está definida. (undefined)');
-            if(retornar) return 'undefined';
-            break;
+
     }
 }
 
@@ -230,6 +234,25 @@ function dev_test_print_array(array,nivelTabulado=0,detalles=false,retornar=fals
     }else{
         echo(valorImprimir)
     }
+}
+
+function dev_test_propiedades_objeto(o) {
+    let objectToInspect
+    let result = []
+
+    for(objectToInspect = o; objectToInspect !== null;
+        objectToInspect = Object.getPrototypeOf(objectToInspect)) {
+        result = result.concat(
+            Object.getOwnPropertyNames(objectToInspect)
+        );
+    }
+
+    return result
+}
+
+function dev_test_objeto_incluye_propiedad(o,propiedad) {
+    let propriedades = dev_test_propiedades_objeto(o)
+    return dev_arr_is_in_array(propriedades,propiedad)
 }
 
 /*STR*/
@@ -1137,6 +1160,30 @@ function dev_arr_print_array(array,detalles=false,retornar=false,tipoDeDato=fals
 
 function dev_arr_count(array) {
     return dev_is_array(array) ? array.length : false
+}
+
+function dev_arr_is_in_array(array,valor) {
+    let result = false
+
+    if (dev_is_array(array)){
+        if (dev_is_array(valor)){
+            let i  = 0
+            result = true
+
+            for(let value of valor){
+                if (!array.includes(value)){
+                    result = false
+                    break
+                }
+            }
+
+        }
+
+    }else {
+        result = array.includes(valor)
+    }
+
+    return result
 }
 
 /*HELP*/
