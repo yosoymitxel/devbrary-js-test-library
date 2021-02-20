@@ -156,6 +156,7 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
                 if(retornar) return 'json';
             }else if(dev_test_objeto_incluye_propiedad(dato,['source','lastIndex','exec','test'])){
                 if(imprimir) echo('Expresión regular RegExp');
+                if(imprimir) echo(dato);
                 if(retornar) return 'regexp';
             }else if(typeof $(dato).html === 'function' && $(dato).html()){
                 if(imprimir) echo('Objeto DOM');
@@ -497,14 +498,14 @@ function dev_str_replace(t,busqueda,reemplazo) {
     if(dev_is_string(t) && (dev_is_string(busqueda) || dev_is_array(busqueda) || dev_is_regexp(busqueda)) && (dev_is_string(reemplazo) || dev_is_array(reemplazo)) ){
         if(dev_is_array(busqueda)) {
             for (let i = 0, iMax = dev_arr_count(busqueda); i < iMax; i++){
-                let valor = dev_is_array(reemplazo) ? reemplazo[i] : reemplazo
+                let valor  = dev_is_array(reemplazo) ? reemplazo[i] : reemplazo
                 let buscar = dev_is_regexp(busqueda[i]) && busqueda[i].flags !== 'g' ? dev_str_reg_crear_expresion(busqueda[i].source) : busqueda[i]
-                t = t.replaceAll(buscar,valor)
+                t          = t.replaceAll(buscar,valor)
             }
 
         }else{
             busqueda = dev_is_regexp(busqueda) && busqueda.flags !== 'g' ? dev_str_reg_crear_expresion(busqueda.source) : busqueda
-            t = t.replaceAll(busqueda,reemplazo)
+            t        = t.replaceAll(busqueda,reemplazo)
         }
 
         return t
