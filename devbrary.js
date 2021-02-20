@@ -396,20 +396,17 @@ function dev_str_to_upper(t) {
 }
 
 function dev_str_conseguir_expresion_regular(t,expresion) {
-    expresion = dev_str_reg_corregir_expresion(expresion)
+    expresion = dev_str_reg_crear_expresion(expresion)
     if( dev_str_reg_incluye(t,expresion) ){
         t = t.match(expresion)
-        if(t.length>1){
-            //FALTA FOR ARRAY
-        }
-        return t[0]
+        return t.length>1 ? t : t[0]
     }
     return false;
 }
+
 function dev_str_capitalizar(t) {
     return t.toLowerCase().replace( /\b./g, function(a){ return a.toUpperCase(); } );
 }
-
 
 function dev_str_acortar_texto(t,cantidadCaracteres) {
     if(dev_is_string(t,1)){
