@@ -494,14 +494,16 @@ function dev_str_trim(t,left=false,right=false) {
 }
 
 function dev_str_replace(t,busqueda,reemplazo) {
-    if(dev_is_string(t) && (dev_is_string(busqueda) || dev_is_array(busqueda) ) && (dev_is_string(reemplazo) || dev_is_array(reemplazo)) ){
+    if(dev_is_string(t) && (dev_is_string(busqueda) || dev_is_array(busqueda) || dev_is_regexp(busqueda)) && (dev_is_string(reemplazo) || dev_is_array(reemplazo)) ){
         if(dev_is_array(busqueda)) {
             for (let i = 0, iMax = dev_arr_count(busqueda); i < iMax; i++){
                 let valor = dev_is_array(reemplazo) ? reemplazo[i] : reemplazo
-                t = t.replaceAll(busqueda[i],valor)
+                let buscar = dev_is_regexp(busqueda[i]) && busqueda[i].flags !== 'g' ? dev_str_reg_crear_expresion(busqueda[i].source) : busqueda[i]
+                t = t.replaceAll(buscar,valor)
             }
 
         }else{
+            busqueda = dev_is_regexp(busqueda) && busqueda.flags !== 'g' ? dev_str_reg_crear_expresion(busqueda.source) : busqueda
             t = t.replaceAll(busqueda,reemplazo)
         }
 
@@ -569,6 +571,10 @@ function dev_is_undefined(obj) {
 
 function dev_is_array(obj,tamanio=0) {
     return (dev_test_tipo_dato(obj)==='array' && obj.length>=tamanio);
+}
+
+function dev_is_regexp(obj) {
+    return dev_test_es_tipo_de_dato(obj,'regexp');
 }
 
 
