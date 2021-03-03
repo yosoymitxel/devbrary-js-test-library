@@ -77,40 +77,7 @@ function dev_test_contador_automatico(valor=false) {
 }
 
 function dev_test_es_tipo_de_dato(dato,tipo) {
-    tipo = tipo.toLowerCase();
-    switch (tipo) {
-        case 'numero':
-        case 'número':
-        case 'num':
-        case 'numeric':
-            tipo = 'number'
-            break;
-        case 'bool':
-        case 'boolean':
-        case 'booleano':
-            tipo = 'boolean'
-            break;
-        case 'string':
-        case 'texto':
-        case 'alfanumerico':
-            tipo = 'string'
-            break;
-        case 'undefined':
-            tipo = 'undefined'
-            break;
-    }
-
-    if(dev_test_var_dump(dato,false,true) == tipo){
-        return true;
-    }
-
-    if((typeof dato === 'string' || dato instanceof String) && typeof dato === tipo){
-        return true;
-    }else if (typeof dato === tipo){
-        return true;
-    }else{
-        return false;
-    }
+    return dev_test_var_dump(dato,false,true) == tipo
 }
 
 function dev_test_var_dump(dato,imprimir=true,retornar=false) {
@@ -172,35 +139,7 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
 }
 
 function dev_test_tipo_dato(dato) {
-    let tipoDato = typeof dato;
-    let valorDato = dato;
-    switch (tipoDato) {
-        case 'number':
-            if (Number.isSafeInteger(valorDato)) {
-                tipoDato = 'int';
-            } else {
-                tipoDato = 'float';
-            }
-            return tipoDato;
-        case 'string':
-            return 'string';
-        case 'object':
-            if (Array.isArray(valorDato)) {
-                return 'array';
-            }else if(valorDato == null){
-                return 'null';
-            }else if(dev_dom_existe_elemento($(dato).attr('id'))){
-                return 'dom';
-            }else if(dato !== undefined && dato !== null && dato.constructor == Object){
-                return 'json';
-            }else{
-                return 'Objeto no reconocido';
-            }
-        case 'boolean':
-            return 'boolean';
-        case 'undefined':
-            return 'undefined';
-    }
+    return dev_test_var_dump(dato,false,true)
 }
 
 function dev_test_depurar(condicion=false,obj=false) {
@@ -388,7 +327,22 @@ function dev_str_reg_corregir_expresion(expresion){
 }
 
 function dev_str_reg_crear_expresion(expresion,flag='g') {
-    return new RegExp(expresion,flag)
+    let reg = ''
+    if(dev_test_es_tipo_de_dato(expresion,'regexp')) {
+        reg = expresion.flags !== '' ? expresion : new RegExp(expresion.source,flag)
+    }else if(!dev_str_inicia_con(expresion,'/') && !dev_str_reg_incluye(expresion,/\/[gim]?$/g)){
+        let regFlag = dev_str_reg_conseguir(t,/\/[gim]?$/g)
+        flag        = dev_is_string(dev_str_reemplazar(regFlag,'/',''),1) ? dev_str_reemplazar(regFlag,'/','') : flag
+        expresion   = dev_str_reemplazar(expresion,[/^\//,/\/[gim]?$/],'')
+        reg = new RegExp(expresion,flag)
+    }else{
+        reg = new RegExp(expresion,flag)
+    }
+    return reg
+}
+
+function dev_str_reg_conseguir(t,expresion) {
+    return dev_str_conseguir_expresion_regular(t,expresion)
 }
 
 function dev_str_primera_letra_mayuscula(texto){
