@@ -331,7 +331,7 @@ function dev_str_reg_crear_expresion(expresion,flag='g') {
     if(dev_test_es_tipo_de_dato(expresion,'regexp')) {
         reg = expresion.flags !== '' ? expresion : new RegExp(expresion.source,flag)
     }else if(!dev_str_inicia_con(expresion,'/') && !dev_str_reg_incluye(expresion,/\/[gim]?$/g)){
-        let regFlag = dev_str_reg_conseguir(t,/\/[gim]?$/g)
+        let regFlag = dev_str_reg_conseguir(expresion,/\/[gim]?$/g)
         flag        = dev_is_string(dev_str_reemplazar(regFlag,'/',''),1) ? dev_str_reemplazar(regFlag,'/','') : flag
         expresion   = dev_str_reemplazar(expresion,[/^\//,/\/[gim]?$/],'')
         reg = new RegExp(expresion,flag)
