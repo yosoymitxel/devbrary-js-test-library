@@ -41,7 +41,7 @@ function dev_test_var_dom_dump(idObjeto){
         }
 
         if(!dev_str_esta_vacio($(id).text())){
-            echo('Text : '+($(id).text()).trim());
+            echo('Text : '+dev_str_trim($(id).text()));
         }
 
         if(!dev_str_esta_vacio($(id).attr('css'))){
@@ -212,21 +212,21 @@ function dev_str_sin_caracteres_especiales(texto,quitarTodos=true){
         //Aquí añades los caracteres que no quieres que se usen
         let caracteresNoPermitidos = ['?','\"','\''];
 
-        texto = (texto.toString()).toLowerCase();
+        texto = (texto.toString()).toLowerCase()
         for(let i=0; i<vocalesNoPermitidas.length;i++){
             texto = texto.replace(dev_str_reg_crear_expresion(vocalesNoPermitidas[i]), vocalesPermitidas[i]);
             //texto = texto.replace(vocalesNoPermitidas[i], vocalesPermitidas[i]);
         }
 
         for(let i=0; i<caracteresNoPermitidos.length;i++){
-            texto = texto.replace(caracteresNoPermitidos[i], '_');
+            texto = texto.replace(caracteresNoPermitidos[i], '_')
         }
 
         //Esta parte reemplaza los espacios en blanco " " y los guiones "-" por guiones bajos "_"
-        texto = texto.replace(/(\s+|\-+|\_\_)+/g,"_");
+        texto = texto.replace(/(\s+|\-+|\_\_)+/g,"_")
 
         if(quitarTodos){
-            texto = dev_str_reemplazar_expresion_regular(texto,'\\W','');
+            texto = dev_str_reemplazar_expresion_regular(texto,'\\W','')
         }
 
     }
@@ -235,9 +235,9 @@ function dev_str_sin_caracteres_especiales(texto,quitarTodos=true){
 
 function dev_str_quitar_espacios_extra(texto){
     if(dev_is_string(texto,1)){
-        texto = texto.trim();
-        texto = texto.replace(/\s\s+/g, ' ');
-        texto = texto.replace(/\s\s/g, '');
+        texto = dev_str_trim(texto)
+        texto = texto.replace(/\s\s+/g, ' ')
+        texto = texto.replace(/\s\s/g, '')
         return texto
     }
     return '';
@@ -342,7 +342,12 @@ function dev_str_reg_crear_expresion(expresion,flag='g') {
 }
 
 function dev_str_reg_conseguir(t,expresion) {
-    return dev_str_conseguir_expresion_regular(t,expresion)
+    expresion = dev_str_reg_crear_expresion(expresion)
+    if( dev_str_reg_incluye(t,expresion) ){
+        t = t.match(expresion)
+        return t.length>1 ? t : t[0]
+    }
+    return false;
 }
 
 function dev_str_primera_letra_mayuscula(texto){
@@ -372,18 +377,16 @@ function dev_str_to_upper(t) {
         t.toUpperCase() :
         false;
 }
-
-function dev_str_conseguir_expresion_regular(t,expresion) {
-    expresion = dev_str_reg_crear_expresion(expresion)
-    if( dev_str_reg_incluye(t,expresion) ){
-        t = t.match(expresion)
-        return t.length>1 ? t : t[0]
-    }
-    return false;
+function dev_str_to_capitalize(t) {
+    return t.toLowerCase().replace( /\b./g, function(a){ return a.toUpperCase(); } );
 }
 
 function dev_str_capitalizar(t) {
-    return t.toLowerCase().replace( /\b./g, function(a){ return a.toUpperCase(); } );
+    return dev_str_to_capitalize(t)
+}
+
+function dev_str_conseguir_expresion_regular(t,expresion) {
+    return dev_str_reg_conseguir(t,expresion)
 }
 
 function dev_str_acortar_texto(t,cantidadCaracteres) {
@@ -500,6 +503,13 @@ function dev_is_regexp(obj) {
     return dev_test_es_tipo_de_dato(obj,'regexp');
 }
 
+function dev_is_json(obj) {
+    return dev_test_es_tipo_de_dato(obj,'json');
+}
+
+function dev_is_null(obj) {
+    return dev_test_es_tipo_de_dato(obj,'null');
+}
 
 /*FECHA*/
 
@@ -598,7 +608,7 @@ function dev_dom_agregar_css(url,titulo='') {
     return false;
 }
 
-function dev_dom_existe_elemento (idObjeto){
+function dev_dom_existe_elemento(idObjeto){
     if(!dev_test_es_tipo_de_dato(idObjeto,'dom')){
         idObjeto = dev_str_quitar_espacios_extra(idObjeto)
 
@@ -722,11 +732,12 @@ function dev_dom_objeto(idObjeto,buscarTodo=false) {
 }
 
 function dev_dom_copiar_en_portapapeles(dato) {
-    let $temp = $("<textarea>");
-    $("body").append($temp);
-    $temp.val(dato).select();
-    document.execCommand("copy");
-    $temp.remove();
+    let $temp = $("<textarea>")
+    $("body").append($temp)
+    $temp.val(dato).select()
+    let result = document.execCommand("copy")
+    $temp.remove()
+    return result
 }
 
 function dev_dom_crear_elemento(etiqueta,contenido,idElementoPadre='body',id='',clase='',name='',arrayAtributosTitulo=null,arrayAtributosValores=null) {
