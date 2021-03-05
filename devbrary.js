@@ -403,38 +403,6 @@ function dev_str_substring(t,inicio, fin) {
     return false;
 }
 
-function dev_str_sin_caracteres_especiales(texto,quitarTodos=true){
-    if(dev_is_string(texto)){
-        //Aquí añades las letras que no quieres que se usen
-        let vocalesNoPermitidas    = ['á','é','í','ó','ú','ñ'];
-
-        //Aquí añades las letras que quieres que se usen
-        let vocalesPermitidas      = ['a','e','i','o','u','ni'];
-
-        //Aquí añades los caracteres que no quieres que se usen
-        let caracteresNoPermitidos = ['?','\"','\''];
-
-        texto = (texto.toString()).toLowerCase();
-        for(let i=0; i<vocalesNoPermitidas.length;i++){
-            texto = texto.replace(dev_str_reg_crear_expresion(vocalesNoPermitidas[i]), vocalesPermitidas[i]);
-            //texto = texto.replace(vocalesNoPermitidas[i], vocalesPermitidas[i]);
-        }
-
-        for(let i=0; i<caracteresNoPermitidos.length;i++){
-            texto = texto.replace(caracteresNoPermitidos[i], '_');
-        }
-
-        //Esta parte reemplaza los espacios en blanco " " y los guiones "-" por guiones bajos "_"
-        texto = texto.replace(/(\s+|\-+|\_\_)+/g,"_");
-
-        if(quitarTodos){
-            texto = dev_str_reemplazar_expresion_regular(texto,'\\W','');
-        }
-
-    }
-    return texto;
-}
-
 function dev_str_trim(t,left=false,right=false) {
     if (dev_is_string(t)){
         if((!left && !right) || (left && right)){
