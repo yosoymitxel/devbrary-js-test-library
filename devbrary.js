@@ -247,7 +247,7 @@ function dev_str_conseguir_numero_string (texto,returnArray=false){
     if(dev_is_numero(texto)){
         return texto;
     }else if (dev_is_string(texto)){
-        let numero =  texto.match(/\d+/g);
+        let numero =  texto.match(/-?\d+/g);
 
         //Se valida si es es un array, hay caso (como el segundo) donde no sale un número directamente sino un array
         numero = Array.isArray(numero)  && !returnArray ? numero.join('') : numero;
