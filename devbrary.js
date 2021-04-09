@@ -257,8 +257,9 @@ function dev_str_conseguir_numero_string (texto,returnArray=false){
     return false;
 }
 
-function dev_str_separador_unidad_mil(numero,delimitador='.'){
+function dev_str_separador_unidad_mil(numero,separadorDecimal=','){
     numero              = numero.toString();
+    let decimal         = dev_str_incluye_reg(numero,'[\.,]') ?  numero.replace(/\d+[\.,]/gi, ''): 0
     let filtered_number = numero.replace(/[^0-9]/gi, '');
     let length          = filtered_number.length;
     let breakpoint      = 1;
@@ -267,14 +268,15 @@ function dev_str_separador_unidad_mil(numero,delimitador='.'){
     for(i = 1; i <= length; i++){
         if(breakpoint > 3){
             breakpoint = 1;
-            formated_number = delimitador + formated_number;
+            formated_number = '.' + formated_number;
         }
+        var next_letter = i + 1;
         formated_number = filtered_number.substring(length - i, length - (i - 1)) + formated_number;
 
         breakpoint++;
     }
 
-    return formated_number;
+    return decimal==0 ? formated_number : formated_number+separadorDecimal+decimal;
 }
 
 function dev_str_esta_vacio(texto){
