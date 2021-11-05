@@ -8,9 +8,9 @@ TEST     = Debug y utilidades para
 DOM      = Manejo de DOM - HTML
 URL      = Manejo de Urls
 STR      = Manejo de string
-IS       = Tipo de variable
 FEC      = Manejo de fechas
 ARR      = Manejo de Arrays
+IS       = Tipo de variable
 
 */
 
@@ -134,12 +134,47 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
                 if(retornar) return 'Objeto no reconocido';
             }
             break;
-
+        case 'boolean':
+            if(imprimir) echo(tipoDato + ' "' + valorDato + '"');
+            if(retornar) return 'boolean';
+            break;
+        case 'undefined':
+            if(imprimir) echo('La variable no está definida. (undefined)');
+            if(retornar) return 'undefined';
+            break;
     }
 }
 
 function dev_test_tipo_dato(dato) {
-    return dev_test_var_dump(dato,false,true)
+    let tipoDato = typeof dato;
+    let valorDato = dato;
+    switch (tipoDato) {
+        case 'number':
+            if (Number.isSafeInteger(valorDato)) {
+                tipoDato = 'int';
+            } else {
+                tipoDato = 'float';
+            }
+            return tipoDato;
+        case 'string':
+            return 'string';
+        case 'object':
+            if (Array.isArray(valorDato)) {
+                return 'array';
+            }else if(valorDato == null){
+                return 'null';
+            }else if(dev_dom_existe_elemento($(dato).attr('id'))){
+                return 'dom';
+            }else if(dato !== undefined && dato !== null && dato.constructor == Object){
+                return 'json';
+            }else{
+                return 'Objeto no reconocido';
+            }
+        case 'boolean':
+            return 'boolean';
+        case 'undefined':
+            return 'undefined';
+    }
 }
 
 function dev_test_depurar(condicion=false,obj=false) {
@@ -575,6 +610,10 @@ function dev_url_this_host() {
 
 function dev_url_this_pagina_actual() {
     return window.location.pathname
+}
+
+function dev_url_str_a_url_amigable(texto,quitarTodos=true) {
+    return (dev_str_sin_caracteres_especiales(texto,quitarTodos)).replace(/_/g,'-');
 }
 
 /*DOM*/
@@ -1128,6 +1167,20 @@ function dev_arr_is_in_array(array,valor) {
     return result
 }
 
+function dev_arr_extraer_en_partes(array,inicio,fin=undefined) {
+    if (dev_is_array(array)){
+        return array.slice(inicio, (dev_is_undefined(fin) ? count(array)-1 : fin) )
+    }
+    return false
+}
+
+function dev_arr_posicion_en_array(array,busqueda) {
+    if (dev_is_array(array) && (dev_is_string(busqueda,1) || dev_is_numero(busqueda))){
+        return array.indexOf(busqueda)
+    }
+    return false
+}
+
 /*HELP*/
 
 function dev_01_help(nombreDeFuncion=''){
@@ -1243,5 +1296,8 @@ function var_dom_dump (texto){
     dev_test_var_dom_dump(texto);
 }
 function t_trim(t) {
-    return dev_str_quitar_espacios_extra(t);
+    return dev_str_quitar_espacios_extra(t)
+}
+function count(array){
+    return dev_arr_count(array)
 }
