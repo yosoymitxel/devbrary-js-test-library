@@ -1,4 +1,4 @@
-# devbrary-js-test-library
+# Devbrary JS test library
 
 Funciones varias para facilitar el uso JavaScript.
 
