@@ -5,12 +5,15 @@ Fecha de inicio: 11/12/2019
 Lista de categorías:
 
 TEST     = Debug y utilidades para
-DOM      = Manejo de DOM - HTML
-URL      = Manejo de Urls
+
 STR      = Manejo de string
-FEC      = Manejo de fechas
-ARR      = Manejo de Arrays
+FORM     = Validaciones de formulario
 IS       = Tipo de variable
+FEC      = Manejo de fechas
+URL      = Manejo de Urls
+DOM      = Manejo de DOM - HTML
+ARR      = Manejo de Arrays
+HTML     = Se utiliza para embeber en html
 
 */
 
