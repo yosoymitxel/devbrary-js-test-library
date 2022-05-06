@@ -1,6 +1,6 @@
 /*
 Librería DevBrary
-Fecha de inicio: 15/05/2020
+Fecha de inicio: 11/12/2019
 
 Lista de categorías:
 
@@ -73,6 +73,7 @@ function dev_test_contador_automatico(valor=false) {
         dev_test_contador_automatico.counter = 0;
     }
     dev_test_contador_automatico.counter++;
+    
     return dev_test_contador_automatico.counter;
 }
 
@@ -83,6 +84,7 @@ function dev_test_es_tipo_de_dato(dato,tipo) {
 function dev_test_var_dump(dato,imprimir=true,retornar=false) {
     let tipoDato = typeof dato;
     let valorDato = dato;
+    
     switch (tipoDato) {
         case 'number':
             if (Number.isSafeInteger(valorDato)) {
@@ -148,6 +150,7 @@ function dev_test_var_dump(dato,imprimir=true,retornar=false) {
 function dev_test_tipo_dato(dato) {
     let tipoDato = typeof dato;
     let valorDato = dato;
+    
     switch (tipoDato) {
         case 'number':
             if (Number.isSafeInteger(valorDato)) {
@@ -275,6 +278,7 @@ function dev_str_quitar_espacios_extra(texto){
         texto = texto.replace(/\s\s/g, '')
         return texto
     }
+
     return '';
 }
 
@@ -282,10 +286,10 @@ function dev_str_conseguir_numero_string (texto,returnArray=false){
     if(dev_is_numero(texto)){
         return texto;
     }else if (dev_is_string(texto)){
-        let numero =  texto.match(/-?\d+/g);
+        let numero =  texto.match(/-?\d+/g)
 
         //Se valida si es es un array, hay caso (como el segundo) donde no sale un número directamente sino un array
-        numero = Array.isArray(numero)  && !returnArray ? numero.join('') : numero;
+        numero = Array.isArray(numero)  && !returnArray ? numero.join('') : numero
         return numero;
     }
 
@@ -305,6 +309,7 @@ function dev_str_separador_unidad_mil(numero,separadorDecimal=','){
             breakpoint = 1;
             formated_number = '.' + formated_number;
         }
+
         var next_letter = i + 1;
         formated_number = filtered_number.substring(length - i, length - (i - 1)) + formated_number;
 
@@ -321,6 +326,7 @@ function dev_str_esta_vacio(texto){
 
 function dev_str_reemplazar_expresion_regular(t,expresion,reemplazo) {
     expresion = dev_str_reg_corregir_expresion(expresion);
+    
     if(dev_is_string(t) && dev_str_reg_incluye(t,expresion)){
         let re = dev_str_reg_crear_expresion(expresion);
         return t.replace(re,reemplazo);
@@ -344,6 +350,7 @@ function dev_str_convertir_a_sting(t) {
                 break;
         }
     }
+
     return t;
 }
 
@@ -365,6 +372,7 @@ function dev_str_reg_corregir_expresion(expresion){
 
 function dev_str_reg_crear_expresion(expresion,flag='g') {
     let reg = ''
+    
     if(dev_test_es_tipo_de_dato(expresion,'regexp')) {
         reg = expresion.flags !== '' ? expresion : new RegExp(expresion.source,flag)
     }else if(dev_str_inicia_con(expresion,'/') && dev_str_reg_incluye(expresion,/\/[gim]?$/g)){
@@ -375,15 +383,18 @@ function dev_str_reg_crear_expresion(expresion,flag='g') {
     }else{
         reg = new RegExp(expresion,flag)
     }
+
     return reg
 }
 
 function dev_str_reg_conseguir(t,expresion) {
     expresion = dev_str_reg_crear_expresion(expresion)
+    
     if( dev_str_reg_incluye(t,expresion) ){
         t = t.match(expresion)
         return t.length>1 ? t : t[0]
     }
+
     return false;
 }
 
@@ -430,6 +441,7 @@ function dev_str_acortar_texto(t,cantidadCaracteres) {
     if(dev_is_string(t,1)){
         return (dev_is_string(t,cantidadCaracteres)) ? dev_str_substring(t,0,cantidadCaracteres)+'...' : t;
     }
+
     return '';
 }
 
@@ -440,6 +452,7 @@ function dev_str_substring(t,inicio, fin) {
         }
         return t.substring(inicio,fin)
     }
+
     return false;
 }
 
@@ -513,7 +526,6 @@ function dev_form_input_numero(idSelect) {
     return dev_is_numero(dev_dom_obj_value(idSelect))
 }
 
-
 /*IS*/
 
 function dev_is_string(t,longitud=0) {
@@ -558,7 +570,7 @@ function dev_fec_fecha_actual() {
 
 function dev_fec_fecha_actual_texto() {
     var meses      = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-    var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
+    var diasSemana = new Array ("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
     var f          = new Date();
     let fecha = `${diasSemana[f.getDay()]} ${f.getDate()} de ${meses[f.getMonth()]} de ${f.getFullYear()}`;
     return fecha;
@@ -579,6 +591,7 @@ function dev_url_get_host(url) {
         let link = dev_url_string_a_url(url);
         return link.hostname;
     }
+
     return false;
 }
 
@@ -627,6 +640,7 @@ function dev_dom_agregar_bootstrap(versionBootstrap='4.4.1',versionJquery='3.4.1
 
 function dev_dom_agregar_js(url,titulo='') {
     url = dev_form_url(url) ? url : dev_url_this_host()+url
+    
     if(dev_form_url(url) && dev_url_pagina_existe(url)){
         titulo = dev_is_string(titulo,1) ?
             titulo:
@@ -634,11 +648,13 @@ function dev_dom_agregar_js(url,titulo='') {
         $('body').append(`<script id="${titulo}" src="${url}"></script>`);
         return true;
     }
+
     return false;
 }
 
 function dev_dom_agregar_css(url,titulo='') {
     url = dev_form_url(url) ? url : dev_url_this_host()+url
+    
     if(dev_form_url(url) && dev_url_pagina_existe(url)){
         titulo = dev_is_string(titulo,1) ?
             titulo:
@@ -646,6 +662,7 @@ function dev_dom_agregar_css(url,titulo='') {
         $('head').append(`<link id="${titulo}" rel="stylesheet" href="${url}">`);
         return true;
     }
+
     return false;
 }
 
@@ -666,6 +683,7 @@ function dev_dom_existe_elemento(idObjeto){
                 return true
             }
         }
+
     }else{
         return true
     }
@@ -769,6 +787,7 @@ function dev_dom_objeto(idObjeto,buscarTodo=false) {
             }
         }
     }
+
     return false;
 }
 
@@ -783,6 +802,7 @@ function dev_dom_copiar_en_portapapeles(dato) {
 
 function dev_dom_crear_elemento(etiqueta,contenido,idElementoPadre='body',id='',clase='',name='',arrayAtributosTitulo=null,arrayAtributosValores=null) {
     idElementoPadre = dev_dom_str_a_id(idElementoPadre);
+   
     if (dev_dom_existe_elemento(idElementoPadre)){
         let attr = (dev_is_array(arrayAtributosTitulo,1) && dev_is_array(arrayAtributosValores,1)) ?
             dev_dom_generar_string_atributos(arrayAtributosTitulo,arrayAtributosValores) :
@@ -790,28 +810,34 @@ function dev_dom_crear_elemento(etiqueta,contenido,idElementoPadre='body',id='',
         $(idElementoPadre).append(`<${etiqueta} id="${id}" class="${clase}" name="${name}" ${attr}>${contenido}</${etiqueta}>`);
         return true;
     }
+
     return false;
 }
 
 function dev_dom_generar_string_atributos(arrayAtributosTitulo,arrayAtributosValores) {
     if (dev_is_array(arrayAtributosTitulo,1) && dev_is_array(arrayAtributosValores,1)){
         var attr = '';
+        
         for(let i=0;i<arrayAtributosTitulo.length;i++){
             attr += arrayAtributosTitulo[i]+'="'+arrayAtributosValores[i]+'" ';
         }
+        
         return attr;
     }
+
     return false
 }
 
 function dev_dom_obj_find(idElementoPadre,busqueda) {
     if (dev_is_string(idElementoPadre,1) && dev_is_string(busqueda,1)){
         idElementoPadre = dev_dom_str_a_id(idElementoPadre);
+       
         if(dev_dom_existe_elemento(idElementoPadre)){
             busqueda = dev_dom_str_a_id(busqueda);
             return $(idElementoPadre).find(busqueda);
         }
     }
+
     return false;
 }
 
@@ -838,6 +864,7 @@ function dev_dom_copiar_en_portapapeles_attr_elemento(id,attr='value') {
     id   = dev_dom_str_a_id(id);
     attr = dev_str_to_lower(dev_str_quitar_espacios_blancos(attr));
     let valor;
+    
     if (dev_dom_existe_elemento(id) && dev_is_string(attr,1)){
         switch (attr) {
             case "value":
@@ -871,12 +898,14 @@ function dev_dom_copiar_en_portapapeles_attr_elemento(id,attr='value') {
         dev_dom_copiar_en_portapapeles(valor);
         return true;
     }
+
     return false;
 }
 
 function dev_dom_str_a_id(id) {
     if(!dev_test_es_tipo_de_dato(id,'dom')){
         id = dev_str_quitar_espacios_extra(id);
+       
         if (dev_is_string(id)){
             id = dev_dom_es_etiqueta_html(id) || dev_str_inicia_con(id,'#') || dev_str_inicia_con(id,'.') ?
                 dev_str_quitar_espacios_extra((id) ):
@@ -886,6 +915,7 @@ function dev_dom_str_a_id(id) {
     }else{
         return id;
     }
+
     return '';
 }
 
@@ -905,6 +935,7 @@ function dev_dom_str_a_unidad_de_medida(t) {
 
 function dev_dom_cambiar_width_heigth(idElemento, width=null, height = null, minWidth = null, minHeight = null) {
     idElemento = dev_dom_str_a_id(idElemento);
+    
     if(dev_dom_existe_elemento(idElemento)){
         let estilosArray       = [width, height, minWidth, minHeight];
         let estilosTituloArray = ['width', 'height', 'min-width', 'min-height'];
@@ -926,20 +957,22 @@ function dev_dom_cambiar_width_heigth(idElemento, width=null, height = null, min
                 atributos = estilosTituloArray[i]+':'+estilosArray[i]+' ';
             }
         }
+
         return dev_dom_style_agregar(idElemento,atributos);
     }
 
     return false;
 }
 
-
 function dev_dom_style_agregar(idElemento,atributos,reemplazar=false) {
     idElemento = dev_dom_str_a_id(idElemento);
+    
     if(dev_dom_existe_elemento(idElemento)){
         let estilos = !reemplazar ? dev_dom_obj_attr(idElemento,'style') : ''
         dev_dom_obj_attr(idElemento,'style',estilos+atributos)
         return true;
     }
+
     return false;
 }
 
@@ -982,6 +1015,7 @@ function dev_dom_generar_array_titulo_valor(arrayAtributosTitulo,arrayAtributosV
             arrayTituloValor[1] = arrayValores;
             return arrayTituloValor;
         }
+        
         return false;
     }else
     if( dev_is_string(dev_str_convertir_a_sting(arrayAtributosTitulo), 1) &&
@@ -1002,12 +1036,14 @@ function dev_dom_crear_elemento_con_string(etiqueta,contenido='',idElementoPadre
 
 function dev_dom_crear_elemento_personalizado(etiqueta,contenido='',idElementoPadre='body',id='',clases='',arrayAtributosTitulo=null,arrayAtributosValores=null,etiquetaCerrada=true) {
     idElementoPadre = dev_dom_str_a_id(idElementoPadre);
+   
     if(dev_is_string(etiqueta,1) && dev_dom_existe_elemento(idElementoPadre)){
         let atributos = dev_dom_generar_string_atributos(arrayAtributosTitulo.push('class'),arrayAtributosValores.push(clases));
         let elemento  = `<${etiqueta} id="${id}" ${atributos}>${contenido}`;
         elemento      = (etiquetaCerrada) ? elemento+`</${etiqueta}>` : elemento ;
         return dev_dom_agregar_html(elemento,idElementoPadre);
     }
+
     return false;
 }
 
@@ -1017,11 +1053,13 @@ function dev_dom_generar_texto_de_html(etiqueta,contenido='',id='',clases='',arr
         let elemento  = `<${etiqueta} id="${id}" ${atributos}>${contenido}`;
         return(etiquetaCerrada) ? elemento+`</${etiqueta}>` : elemento ;
     }
+
     return false;
 }
 
 function dev_dom_agregar_html(textoHtml,idElementoPadre,alFinal=true) {
     idElementoPadre = dev_dom_str_a_id(idElementoPadre);
+  
     if (dev_dom_existe_elemento(idElementoPadre) && dev_str_reg_incluye(textoHtml,/(<)(.|\n)+(>)$/)){
         if (alFinal){
             $(idElementoPadre).append(textoHtml);
@@ -1030,6 +1068,7 @@ function dev_dom_agregar_html(textoHtml,idElementoPadre,alFinal=true) {
         }
         return true;
     }
+
     return false;
 }
 
@@ -1039,6 +1078,7 @@ function dev_dom_agregar_jquery(version='1.3.1',etiquetaPadre='head',logCargado=
     let script = document.createElement( "script" );
     script.type = "text/javascript";
     script.src = `https://ajax.googleapis.com/ajax/libs/jquery/${version}/jquery.min.js`;
+  
     if(logCargado){
         script.onload = function () {
             echo('JQuery '+version+' ha sido cargado correctamente');
@@ -1064,6 +1104,7 @@ function dev_dom_convertir_html_a_jpg(idElemento,nombreArchivo='screenshot-'+dev
     dev_dom_get_js( "https://www.linkeapy.ga/assets/js/filesaver.js")
 
     idElemento = dev_dom_str_a_id(idElemento);
+    
     html2canvas($(idElemento), {
         onrendered: function(canvas) {
             theCanvas = canvas;
@@ -1077,6 +1118,7 @@ function dev_dom_convertir_html_a_jpg(idElemento,nombreArchivo='screenshot-'+dev
 function dev_dom_agregar_js_a_iframe(id,script, scriptId='script-iframe') {
     id = dev_dom_str_a_id(id)
     var $iframes = $(id);
+    
     $iframes.each(function () {
         var thisDoc = this.contentWindow.document;
         if ( ! thisDoc.getElementById(scriptID)) {
@@ -1091,20 +1133,24 @@ function dev_dom_agregar_js_a_iframe(id,script, scriptId='script-iframe') {
 
 function dev_dom_class_replace(idElemento,classBuscar,classReemplazar='') {
     idElemento = dev_dom_str_a_id(idElemento)
+   
     if (dev_dom_existe_elemento(idElemento)){
         $(idElemento).removeClass(classBuscar).addClass(classReemplazar)
         return true
     }
+
     return false;
 }
 
 function dev_dom_class_toogle(idElemento,classBuscar,classReemplazar='') {
     idElemento = dev_dom_str_a_id(idElemento)
+   
     if (dev_dom_existe_elemento(idElemento)){
         $(idElemento).toggleClass(classBuscar)
         $(idElemento).toggleClass(classReemplazar)
         return true
     }
+
     return false;
 }
 
@@ -1116,6 +1162,7 @@ function dev_dom_scroll_top(velocidadMS = 500){
 
 function dev_arr_unir_arrays(array1,array2) {
     let result;
+    
     if (dev_is_array(array1) && dev_is_array(array2)){
         result = array1.concat(array2);
     }else if(dev_is_array(array1)){
@@ -1125,6 +1172,7 @@ function dev_arr_unir_arrays(array1,array2) {
     }else{
         result = false;
     }
+
     return result;
 }
 
@@ -1132,6 +1180,7 @@ function dev_arr_incluye_texto(array,t,logitudTexto=1) {
     if(dev_is_array(array) && dev_is_string(t,logitudTexto)){
         return array.includes(t);
     }
+
     return false;
 }
 
@@ -1171,6 +1220,7 @@ function dev_arr_extraer_en_partes(array,inicio,fin=undefined) {
     if (dev_is_array(array)){
         return array.slice(inicio, (dev_is_undefined(fin) ? count(array)-1 : fin) )
     }
+
     return false
 }
 
@@ -1178,6 +1228,7 @@ function dev_arr_posicion_en_array(array,busqueda) {
     if (dev_is_array(array) && (dev_is_string(busqueda,1) || dev_is_numero(busqueda))){
         return array.indexOf(busqueda)
     }
+
     return false
 }
 
@@ -1274,7 +1325,6 @@ function dev_html_no_permitir_espacios_input(evento=event) {
         return false;
     }
 }
-
 
 function dev_html_input_text(cantidadCaracteres=false,conEspacios=true,evento=event) {
     cantidadCaracteres = !(cantidadCaracteres) ? (cantidadCaracteres).length : cantidadCaracteres;
