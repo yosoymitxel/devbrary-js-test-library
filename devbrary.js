@@ -244,7 +244,7 @@ function dev_str_quitar_espacios_blancos(texto) {
 function dev_str_sin_caracteres_especiales(texto,quitarTodos=true){
     if(dev_is_string(texto)){
         texto = dev_str_quitar_acentos(texto)
-        
+
         //Aquí añades las letras que no quieres que se usen
         let vocalesNoPermitidas    = ['á','é','í','ó','ú','ñ'];
 
@@ -272,6 +272,7 @@ function dev_str_sin_caracteres_especiales(texto,quitarTodos=true){
         }
 
     }
+
     return texto;
 }
 
@@ -454,6 +455,7 @@ function dev_str_substring(t,inicio, fin) {
         if(fin<0){
             return t.substring(inicio, (t.length + fin) )
         }
+        
         return t.substring(inicio,fin)
     }
 
