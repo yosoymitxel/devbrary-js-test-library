@@ -5,7 +5,6 @@ Fecha de inicio: 11/12/2019
 Lista de categorías:
 
 TEST     = Debug y utilidades para
-
 STR      = Manejo de string
 FORM     = Validaciones de formulario
 IS       = Tipo de variable
