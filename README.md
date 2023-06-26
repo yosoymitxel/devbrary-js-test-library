@@ -2,6 +2,19 @@
 
 El archivo devbrary.js es una librería hecha en jQuery que contiene una serie de funciones y métodos que se pueden utilizar para versatilizar ciertas aciones en el código JavaScript. 
 Esta biblioteca incluye funciones para el manejo de DOM y HTML, el manejo de URLs, el manejo de SQL, el manejo de strings, el manejo de fechas, el manejo de arrays, el manejo de variables y el debug de aplicaciones. 
+## Categorías
+
+Devbrary JS test library está organizada en diferentes categorías que agrupan las funciones según su funcionalidad. Aquí hay una lista de las categorías disponibles:
+
+* TEST     = Debug y utilidades para
+* STR      = Manejo de string
+* FORM     = Validaciones de formulario
+* IS       = Tipo de variable
+* FEC      = Manejo de fechas
+* URL      = Manejo de Urls
+* DOM      = Manejo de DOM - HTML
+* ARR      = Manejo de Arrays
+* HTML     = Se utiliza para embeber en html
 
 Este se divide en distintas finalidades de funciones usando como prefijo `dev_`
 
